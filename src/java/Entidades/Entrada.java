@@ -1,35 +1,105 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
+ * Entidad POJO de entrada
  *
- * @author G3.
+ * @author Diego.
  */
 @Entity
+@Table(name = "Entrada", schema = "parquedb")
+@NamedQueries({
+    @NamedQuery(name = "VerEntradasporFecha", query = "SELECT e FROM Entrada e WHERE e.fecha_entrada =: fecha_entrada")
+    ,
+    @NamedQuery(name = "VerEntradasporPrecio", query = "SELECT e FROM Entrada e WHERE e.precio =: precio")
+})
 public class Entrada implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer id_entrada;
+    @Temporal(TemporalType.DATE)
+    private Date fecha_entrada;
+    private Float precio;
+    @OneToMany
+    private Set<Compra> listaCompras;
+    @ManyToMany(mappedBy = "listaEntradas")
+    private Set<Zona> listaZonas;
+    @ManyToOne
+    private Admin admin;
 
-    public Integer getId() {
-        return id;
+    public Integer getId_entrada() {
+        return id_entrada;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId_entrada(Integer id_entrada) {
+        this.id_entrada = id_entrada;
+    }
+
+    public Date getFecha_entrada() {
+        return fecha_entrada;
+    }
+
+    public void setFecha_entrada(Date fecha_entrada) {
+        this.fecha_entrada = fecha_entrada;
+    }
+
+    public Float getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Float precio) {
+        this.precio = precio;
+    }
+
+    @XmlTransient
+    public Set<Compra> getListaCompras() {
+        return listaCompras;
+    }
+
+    public void setListaCompras(Set<Compra> listaCompras) {
+        this.listaCompras = listaCompras;
+    }
+
+    @XmlTransient
+    public Set<Zona> getListaZonas() {
+        return listaZonas;
+    }
+
+    public void setListaZonas(Set<Zona> listaZonas) {
+        this.listaZonas = listaZonas;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (id_entrada != null ? id_entrada.hashCode() : 0);
         return hash;
     }
 
@@ -40,7 +110,7 @@ public class Entrada implements Serializable {
             return false;
         }
         Entrada other = (Entrada) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id_entrada == null && other.id_entrada != null) || (this.id_entrada != null && !this.id_entrada.equals(other.id_entrada))) {
             return false;
         }
         return true;
@@ -48,7 +118,7 @@ public class Entrada implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Entrada[ id=" + id + " ]";
+        return "Entidades.Entrada[ id=" + id_entrada + " ]";
     }
 
 }
