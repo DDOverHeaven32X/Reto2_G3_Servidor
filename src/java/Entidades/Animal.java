@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author G3.
+ * @author Adrian.
  */
 @Entity
 @Table (name = "Animal", schema = "parquedb")
