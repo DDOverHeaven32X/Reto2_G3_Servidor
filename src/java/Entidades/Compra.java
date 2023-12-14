@@ -1,35 +1,73 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author G3.
+ * @author Diego, Ander, Adrian.
  */
 @Entity
+@Table(name = "Compra", schema = "parquedb")
+@XmlRootElement
 public class Compra implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @EmbeddedId
+    private CompraId compraId;
+    @Temporal(TemporalType.DATE)
+    private Date fecha_compra;
+    @ManyToOne
+    private Cliente cliente;
+    @ManyToOne
+    private Entrada entrada;
 
-    public Integer getId() {
-        return id;
+    public CompraId getCompraId() {
+        return compraId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCompraId(CompraId compraId) {
+        this.compraId = compraId;
+    }
+
+    public Date getFecha_compra() {
+        return fecha_compra;
+    }
+
+    public void setFecha_compra(Date fecha_compra) {
+        this.fecha_compra = fecha_compra;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Entrada getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(Entrada entrada) {
+        this.entrada = entrada;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (fecha_compra != null ? fecha_compra.hashCode() : 0);
         return hash;
     }
 
@@ -40,7 +78,7 @@ public class Compra implements Serializable {
             return false;
         }
         Compra other = (Compra) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.fecha_compra == null && other.fecha_compra != null) || (this.fecha_compra != null && !this.fecha_compra.equals(other.fecha_compra))) {
             return false;
         }
         return true;
@@ -48,7 +86,7 @@ public class Compra implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Compra[ id=" + id + " ]";
+        return "Entidades.Compra[ id=" + fecha_compra + " ]";
     }
 
 }
