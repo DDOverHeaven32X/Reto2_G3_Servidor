@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Entidad POJO de Compra, tabla con relacion N/M con atributos
  *
  * @author Diego, Ander, Adrian.
  */
