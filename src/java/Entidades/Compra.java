@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,8 +29,10 @@ public class Compra implements Serializable {
     private CompraId compraId;
     @Temporal(TemporalType.DATE)
     private Date fecha_compra;
+    @MapsId("id_user")
     @ManyToOne
     private Cliente cliente;
+    @MapsId("id_entrada")
     @ManyToOne
     private Entrada entrada;
 

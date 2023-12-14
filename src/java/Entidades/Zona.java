@@ -46,14 +46,14 @@ public class Zona implements Serializable {
     @ManyToOne
     private Admin admin;
     @ManyToMany
-    @JoinTable(name="pertenece", schema="parquedb")
+    @JoinTable(name = "pertenece", schema = "parquedb")
     private Set<Entrada> listaEntradas;
 
     //Getters y Setters
     public Integer getId_zona() {
         return id_zona;
     }
-    
+
     public void setId_zona(Integer id_zona) {
         this.id_zona = id_zona;
     }
@@ -81,11 +81,11 @@ public class Zona implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
+
     public Set<Animal> getListaAnimales() {
         return listaAnimales;
     }
-    @XmlTransient
+
     public void setListaAnimales(Set<Animal> listaAnimales) {
         this.listaAnimales = listaAnimales;
     }
@@ -98,10 +98,11 @@ public class Zona implements Serializable {
         this.admin = admin;
     }
 
+    @XmlTransient
     public Set<Entrada> getListaEntradas() {
         return listaEntradas;
     }
-    @XmlTransient
+
     public void setListaEntradas(Set<Entrada> listaEntradas) {
         this.listaEntradas = listaEntradas;
     }
