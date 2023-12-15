@@ -28,7 +28,9 @@ import javax.xml.bind.annotation.XmlTransient;
     ,
     @NamedQuery(name = "filtrarPorTipoAnimal",
             query = "SELECT z FROM Zona z WHERE z.tipo_animal = :tipo_animal")
-
+    ,
+    @NamedQuery(name = "mostrarEntradasPorZona",
+            query = "SELECT z FROM Zona z INNER JOIN Entrada e ON z.listaEntradas = e.listaEntradas")
 })
 @XmlRootElement
 public class Zona implements Serializable {

@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "verEntradasporFecha", query = "SELECT e FROM Entrada e WHERE e.fecha_entrada = :fecha_entrada")
     ,
     @NamedQuery(name = "verEntradasporPrecio", query = "SELECT e FROM Entrada e WHERE e.precio = :precio")
+
 })
 @XmlRootElement
 public class Entrada implements Serializable {
