@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -25,10 +26,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Entrada", schema = "parquedb")
 @NamedQueries({
-    @NamedQuery(name = "VerEntradasporFecha", query = "SELECT e FROM Entrada e WHERE e.fecha_entrada =: fecha_entrada")
+    @NamedQuery(name = "verEntradasporFecha", query = "SELECT e FROM Entrada e WHERE e.fecha_entrada = :fecha_entrada")
     ,
-    @NamedQuery(name = "VerEntradasporPrecio", query = "SELECT e FROM Entrada e WHERE e.precio =: precio")
+    @NamedQuery(name = "verEntradasporPrecio", query = "SELECT e FROM Entrada e WHERE e.precio = :precio")
 })
+@XmlRootElement
 public class Entrada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +41,7 @@ public class Entrada implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fecha_entrada;
     private Float precio;
-    @OneToMany
+    @OneToMany(mappedBy = "entrada")
     private Set<Compra> listaCompras;
     @ManyToMany(mappedBy = "listaEntradas")
     private Set<Zona> listaZonas;

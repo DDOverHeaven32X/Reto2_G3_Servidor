@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -20,6 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @DiscriminatorValue("ADMIN")
+@XmlRootElement
 public class Admin extends Usuario {
 
     private static final long serialVersionUID = 1L;

@@ -12,17 +12,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Adrian.
  */
 @Entity
-@Table (name = "Animal", schema = "parquedb")
+@Table(name = "Animal", schema = "parquedb")
 @NamedQueries({
-    @NamedQuery(name = "visualizarAnimales", query = "SELECT a FROM Animal a WHERE a.especie = :especie"),
-    @NamedQuery(name = "visualizarAnimales", query = "SELECT a FROM Animal a WHERE a.alimentacion = :alimentacion")
+    @NamedQuery(name = "visualizarAnimalesPorEspecie", query = "SELECT a FROM Animal a WHERE a.especie = :especie")
+    ,
+    @NamedQuery(name = "visualizarAnimalesPorAlimentacion", query = "SELECT a FROM Animal a WHERE a.alimentacion = :alimentacion")
+    ,
+    @NamedQuery(name = "listarEspecies", query = "SELECT DISTINCT a.especie FROM Animal a")
 })
+@XmlRootElement
 public class Animal implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +46,7 @@ public class Animal implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "salud", insertable = false, updatable = false)
     private Salud salud;
-    
+
     @ManyToOne
     private Admin admin;
     @ManyToOne
@@ -134,8 +139,6 @@ public class Animal implements Serializable {
     public void setZona(Zona zona) {
         this.zona = zona;
     }
-    
-    
 
     @Override
     public int hashCode() {

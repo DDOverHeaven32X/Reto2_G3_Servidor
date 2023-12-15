@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author G3.
+ * @author Ander.
  */
 @Entity
 @Table(name = "Zona", schema = "parquedb")
@@ -82,6 +82,7 @@ public class Zona implements Serializable {
         this.descripcion = descripcion;
     }
 
+    @XmlTransient
     public Set<Animal> getListaAnimales() {
         return listaAnimales;
     }

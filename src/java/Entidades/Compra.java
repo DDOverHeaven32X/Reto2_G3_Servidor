@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Diego, Ander, Adrian.
  */
 @Entity
-@Table(name = "Compra", schema = "parquedb")
+@Table(name = "Compra", schema = "parquedbPrueba")
 @XmlRootElement
 public class Compra implements Serializable {
 
