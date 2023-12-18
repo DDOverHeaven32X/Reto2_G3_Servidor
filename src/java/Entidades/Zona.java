@@ -3,6 +3,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.Set;
 import static javax.persistence.CascadeType.ALL;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -29,8 +31,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "filtrarPorTipoAnimal",
             query = "SELECT z FROM Zona z WHERE z.tipo_animal = :tipo_animal")
     ,
-    @NamedQuery(name = "mostrarEntradasPorZona",
-            query = "SELECT z FROM Zona z INNER JOIN Entrada e ON z.listaEntradas = e.listaEntradas")
+    @NamedQuery(name = "mostrarZonasPorEntrada",
+            query = "SELECT z FROM Zona z JOIN z.listaEntradas e WHERE e.id_entrada = :id_entrada")
 })
 @XmlRootElement
 public class Zona implements Serializable {
@@ -40,6 +42,7 @@ public class Zona implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     //Atributos
     private Integer id_zona;
+    @Column(nullable = false)
     private String nombre;
     private String tipo_animal;
     private String descripcion;
@@ -47,7 +50,7 @@ public class Zona implements Serializable {
     private Set<Animal> listaAnimales;
     @ManyToOne
     private Admin admin;
-    @ManyToMany
+    @ManyToMany(cascade = ALL)
     @JoinTable(name = "pertenece", schema = "parquedb")
     private Set<Entrada> listaEntradas;
 

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -26,6 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "visualizarAnimalesPorAlimentacion", query = "SELECT a FROM Animal a WHERE a.alimentacion = :alimentacion")
     ,
     @NamedQuery(name = "listarEspecies", query = "SELECT DISTINCT a.especie FROM Animal a")
+    ,
+    @NamedQuery(name = "visualizarAnimalesDeUnaZona", query = "SELECT a FROM Animal a WHERE a.zona = :zona")
 })
 @XmlRootElement
 public class Animal implements Serializable {
@@ -35,20 +38,23 @@ public class Animal implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id_animal;
     private String nombre;
+    @Column(nullable = true)
     private String genero;
     private Integer edad;
     private Float peso;
     private Float altura;
     private String especie;
     @Enumerated(EnumType.STRING)
-    @Column(name = "alimentacion", insertable = false, updatable = false)
+    @Column(name = "alimentacion", insertable = false, updatable = false, nullable = false)
     private Alimentacion alimentacion;
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "salud", insertable = false, updatable = false)
+    @Column(name = "salud", insertable = false, updatable = false, nullable = false)
     private Salud salud;
 
     @ManyToOne
     private Admin admin;
+    @NotNull
     @ManyToOne
     private Zona zona;
 
