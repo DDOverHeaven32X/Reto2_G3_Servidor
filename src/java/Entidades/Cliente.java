@@ -1,35 +1,68 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.Set;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
+ * Entidad POJO de cliente, hereda de la entidad USUARIO
  *
- * @author G3.
+ * @author Diego.
  */
 @Entity
-public class Cliente implements Serializable {
+@DiscriminatorValue("CLIENT")
+@NamedQueries({
+    @NamedQuery(name = "VerUsuarioPorCuentaBancaria", query = "SELECT c FROM Cliente c WHERE c.n_tarjeta = :n_tarjeta AND c.pin = :pin")
+})
+@XmlRootElement
+public class Cliente extends Usuario {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    public Long getId() {
-        return id;
+    private Long n_tarjeta;
+    private Integer pin;
+    @OneToMany(mappedBy = "cliente")
+    private Set<Compra> listaCompra;
+
+    public Long getN_tarjeta() {
+        return n_tarjeta;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setN_tarjeta(Long n_tarjeta) {
+        this.n_tarjeta = n_tarjeta;
+    }
+
+    public Integer getPin() {
+        return pin;
+    }
+
+    public void setPin(Integer pin) {
+        this.pin = pin;
+    }
+
+    //@XmlTransient
+    @XmlTransient
+    public Set<Compra> getListaCompra() {
+        return listaCompra;
+    }
+
+    public void setListaCompra(Set<Compra> listaCompra) {
+        this.listaCompra = listaCompra;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (n_tarjeta != null ? n_tarjeta.hashCode() : 0);
         return hash;
     }
 
@@ -40,7 +73,7 @@ public class Cliente implements Serializable {
             return false;
         }
         Cliente other = (Cliente) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.n_tarjeta == null && other.n_tarjeta != null) || (this.n_tarjeta != null && !this.n_tarjeta.equals(other.n_tarjeta))) {
             return false;
         }
         return true;
@@ -48,7 +81,7 @@ public class Cliente implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Cliente[ id=" + id + " ]";
+        return "Entidades.Cliente[ id=" + n_tarjeta + " ]";
     }
 
 }

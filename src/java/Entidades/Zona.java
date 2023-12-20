@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author G3.
+ * @author Ander.
  */
 @Entity
 @Table(name = "Zona", schema = "parquedb")
@@ -46,7 +46,7 @@ public class Zona implements Serializable {
     @ManyToOne
     private Admin admin;
     @ManyToMany
-    @JoinTable(name="pertenece", schema="parquedb")
+    @JoinTable(name = "pertenece", schema = "parquedb")
     private Set<Entrada> listaEntradas;
 
     //Getters y Setters
@@ -57,7 +57,6 @@ public class Zona implements Serializable {
     public void setId_zona(Integer id_zona) {
         this.id_zona = id_zona;
     }
-
     public String getNombre() {
         return nombre;
     }
@@ -101,7 +100,7 @@ public class Zona implements Serializable {
     public Set<Entrada> getListaEntradas() {
         return listaEntradas;
     }
-    @XmlTransient
+
     public void setListaEntradas(Set<Entrada> listaEntradas) {
         this.listaEntradas = listaEntradas;
     }
