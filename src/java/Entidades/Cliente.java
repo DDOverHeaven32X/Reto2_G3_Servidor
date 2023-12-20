@@ -49,7 +49,6 @@ public class Cliente extends Usuario {
         this.pin = pin;
     }
 
-    //@XmlTransient
     @XmlTransient
     public Set<Compra> getListaCompra() {
         return listaCompra;
