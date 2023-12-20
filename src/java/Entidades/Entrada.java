@@ -33,6 +33,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "verEntradasporPrecio", query = "SELECT e FROM Entrada e WHERE e.precio = :precio")
     ,
     @NamedQuery(name = "verEntradaCliente", query = "SELECT e FROM Entrada e JOIN e.listaCompras c JOIN c.cliente u WHERE u.login = :login")
+    ,
+    @NamedQuery(name = "verTodasLasEntradas", query = "SELECT e FROM Entrada e ORDER BY e.id_entrada ASC")
+    ,
+    @NamedQuery(name = "filtrarEntradaPorId", query = "SELECT e FROM Entrada e ")
 })
 @XmlRootElement
 public class Entrada implements Serializable {
