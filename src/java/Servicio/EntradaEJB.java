@@ -8,6 +8,7 @@ import Excepciones.ReadException;
 import Excepciones.UpdateException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -70,6 +71,7 @@ public class EntradaEJB implements EntradaIntefraz {
         try {
             entrada
                     = em.createNamedQuery("verEntradasporFecha").setParameter("fecha_entrada", fecha).getResultList();
+
         } catch (Exception e) {
             throw new ReadException(e.getMessage());
         }
@@ -82,7 +84,9 @@ public class EntradaEJB implements EntradaIntefraz {
         try {
             entrada
                     = em.createNamedQuery("verEntradasporPrecio").setParameter("precio", valor).getResultList();
+
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new ReadException(e.getMessage());
         }
         return entrada;

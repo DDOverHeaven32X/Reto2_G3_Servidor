@@ -6,8 +6,12 @@ import Excepciones.CreateException;
 import Excepciones.DeleteException;
 import Excepciones.ReadException;
 import Excepciones.UpdateException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -32,6 +36,8 @@ public class EntradaFacadeREST {
 
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
+
+    private static final Logger LOGGER = Logger.getLogger("/Servicio/EntradaFacadeREST");
 
     @EJB
     private EntradaIntefraz entInter;
@@ -86,6 +92,7 @@ public class EntradaFacadeREST {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Entrada> findAll() {
+        LOGGER.info("Mostrando todas las entradas");
         try {
             return entInter.viewAllEntradas();
         } catch (ReadException e) {
@@ -94,23 +101,35 @@ public class EntradaFacadeREST {
     }
 
     @GET
-    @Path("getFecha_entrada/{fechaCon}")
+    @Path("verEntradasporFecha/{fechaCon}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Entrada> filtrarEntradaPorFecha(@PathParam("fechaCon") Date fechaCon) {
+    public List<Entrada> filtrarEntradaPorFecha(@PathParam("fechaCon") String fechaCon) {
+
+        LOGGER.info("Mostrando fecha por usuario");
+
         try {
-            return entInter.viewEntradaByDate(fechaCon);
-        } catch (ReadException e) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = formatter.parse(fechaCon);
+            return entInter.viewEntradaByDate(date);
+
+        } catch (ReadException | ParseException e) {
+            System.out.println(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
-    /*@GET
-    @Path("getPrecio/{precio}")
+    @GET
+    @Path("verEntradasporPrecio/{precio}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Entrada> filtrarEntradaPorPrecio(@PathParam("Float") Float precio) {
+
+        LOGGER.info("Mostrando entradas por precio");
         try {
+
             return entInter.viewEntradaByPrice(precio);
+
         } catch (ReadException e) {
+            System.out.println(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
     }
@@ -124,7 +143,8 @@ public class EntradaFacadeREST {
         } catch (ReadException e) {
             throw new InternalServerErrorException(e.getMessage());
         }
-    }*/
+    }
+
     protected EntityManager getEntityManager() {
         return em;
     }
