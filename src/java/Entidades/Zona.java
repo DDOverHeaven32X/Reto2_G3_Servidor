@@ -15,7 +15,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -26,6 +25,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Zona", schema = "parquedb")
 @NamedQueries({
+    @NamedQuery(name = "verTodasLasZonas", query = "SELECT z FROM Zona z ORDER BY z.id_zona ASC")
+    ,
+    
     @NamedQuery(name = "filtrarPorZona", query = "SELECT z FROM Zona z WHERE z.nombre = :nombre")
     ,
     @NamedQuery(name = "filtrarPorTipoAnimal",
@@ -58,10 +60,11 @@ public class Zona implements Serializable {
     public Integer getId_zona() {
         return id_zona;
     }
-    
+
     public void setId_zona(Integer id_zona) {
         this.id_zona = id_zona;
     }
+
     public String getNombre() {
         return nombre;
     }
@@ -85,11 +88,12 @@ public class Zona implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
+
+    @XmlTransient
     public Set<Animal> getListaAnimales() {
         return listaAnimales;
     }
-    @XmlTransient
+
     public void setListaAnimales(Set<Animal> listaAnimales) {
         this.listaAnimales = listaAnimales;
     }
@@ -102,6 +106,7 @@ public class Zona implements Serializable {
         this.admin = admin;
     }
 
+    @XmlTransient
     public Set<Entrada> getListaEntradas() {
         return listaEntradas;
     }
