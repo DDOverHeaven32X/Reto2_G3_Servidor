@@ -1,8 +1,20 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Servicio;
 
+import Entidades.Alimentacion;
 import Entidades.Animal;
+import Entidades.Zona;
+import Excepciones.CreateException;
+import Excepciones.DeleteException;
+import Excepciones.ReadException;
+import Excepciones.UpdateException;
 import java.util.List;
-import javax.ejb.Stateless;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -14,73 +26,142 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.InternalServerErrorException;
 
 /**
  *
- * @author Jason.
+ * @author Adrian
  */
-@Stateless
 @Path("entidades.animal")
-public class AnimalFacadeREST extends AbstractFacade<Animal> {
+public class AnimalFacadeREST {
 
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
+    
+    private static final Logger LOGGER = Logger.getLogger("/Servicio/AnimalFacadeREST");
 
+    @EJB
+    private AnimalInterfaz ainter;
+    
     public AnimalFacadeREST() {
-        super(Animal.class);
+        
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Animal entity) {
-        super.create(entity);
+    public void create(Animal animal) {
+        try {
+            ainter.createAnimal(animal);
+        } catch (CreateException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @PUT
-    @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Animal entity) {
-        super.edit(entity);
+    public void edit(@PathParam("id") Integer id, Animal animal) {
+        try {
+            ainter.updateAnimal(animal);
+        } catch (UpdateException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("borrar/{id}")
     public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+        try {
+            ainter.deleteAnimal(ainter.filtrarAnimalPorID(id));
+        } catch (DeleteException | ReadException e) {
+            LOGGER.info(e.getMessage());
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @GET
-    @Path("{id}")
+    @Path("buscarPorID/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Animal find(@PathParam("id") Integer id) {
-        return super.find(id);
+        try {
+            return ainter.filtrarAnimalPorID(id);
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @GET
-    @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Animal> findAll() {
-        return super.findAll();
+        try {
+            return ainter.readAnimal();
+        } catch (ReadException e) {
+            System.out.println(e.getMessage());
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
+    @GET
+    @Path("visualizarAnimalesPorEspecie/{especie}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Animal> findAnimalsBySpecies(@PathParam("especie") String especie) {
+        try {
+            return ainter.viewAnimalByEspecie(especie);
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+    
+    @GET
+    @Path("visualizarAnimalesPorAlimentacion/{alimentacion}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Animal> findAnimalsByFeeding(@PathParam("alimentacion") Alimentacion alimentacion) {
+        try {
+            return ainter.viewAnimalByAlimentacion(alimentacion);
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+    
+    @GET
+    @Path("listarEspecies")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Animal> findSpecies() {
+        try {
+            return ainter.viewEspecies();
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+    
+    @GET
+    @Path("visualizarAnimalesDeUnaZona/{zona}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Animal> findAnimalsInAnArea(@PathParam("zona") Integer zona) {
+        try {
+            return ainter.viewAnimalesDeUnaZona(zona);
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+    
+    /*
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Animal> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
+        
     }
 
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
-        return String.valueOf(super.count());
+        
     }
+    */
 
-    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
 }
