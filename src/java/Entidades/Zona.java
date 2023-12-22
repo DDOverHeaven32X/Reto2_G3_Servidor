@@ -3,6 +3,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.Set;
 import static javax.persistence.CascadeType.ALL;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Zona", schema = "parquedb")
 @NamedQueries({
+    @NamedQuery(name = "verTodasLasZonas", query = "SELECT z FROM Zona z ORDER BY z.id_zona ASC")
+    ,
+    
     @NamedQuery(name = "filtrarPorZona", query = "SELECT z FROM Zona z WHERE z.nombre = :nombre")
     ,
     @NamedQuery(name = "filtrarPorTipoAnimal", query = "SELECT z FROM Zona z WHERE z.tipo_animal = :tipo_animal")
@@ -39,6 +43,7 @@ public class Zona implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     //Atributos
     private Integer id_zona;
+    @Column(nullable = false)
     private String nombre;
     private String tipo_animal;
     private String descripcion;
@@ -46,7 +51,7 @@ public class Zona implements Serializable {
     private Set<Animal> listaAnimales;
     @ManyToOne
     private Admin admin;
-    @ManyToMany
+    @ManyToMany(cascade = ALL)
     @JoinTable(name = "pertenece", schema = "parquedb")
     private Set<Entrada> listaEntradas;
 

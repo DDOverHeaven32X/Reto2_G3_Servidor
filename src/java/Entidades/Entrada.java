@@ -3,6 +3,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -41,11 +43,14 @@ public class Entrada implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id_entrada;
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fecha_entrada;
+    @Column(nullable = false)
     private Float precio;
     @OneToMany(mappedBy = "entrada")
     private Set<Compra> listaCompras;
+    @Column(nullable = false)
     @ManyToMany(mappedBy = "listaEntradas")
     private Set<Zona> listaZonas;
     @ManyToOne
