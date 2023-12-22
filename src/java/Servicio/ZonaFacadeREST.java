@@ -40,8 +40,6 @@ public class ZonaFacadeREST {
     @EJB
     private ZonaInterfaz zonaInter;
 
-    Zona zona = new Zona();
-
     public ZonaFacadeREST() {
         // super(Usuario.class);
     }

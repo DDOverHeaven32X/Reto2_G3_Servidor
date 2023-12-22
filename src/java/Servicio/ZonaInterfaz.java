@@ -27,8 +27,8 @@ public interface ZonaInterfaz {
     public List<Zona> viewByNombre(String nombreZona) throws ReadException;
 
     public List<Zona> viewByTipo(String tipoAnimal) throws ReadException;
-    
-     public Zona viewZonaByEntrada(String entrada) throws ReadException;
+
+    public Zona viewZonaByEntrada(String entrada) throws ReadException;
 
     public void updateZona(Zona zona) throws UpdateException;
 
