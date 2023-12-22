@@ -28,24 +28,38 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Fachada RESTful del lado servidor de la entidad Entrada
  *
  * @author Diego.
  */
 @Path("entidades.entrada")
 public class EntradaFacadeREST {
 
+    /**
+     * LLamada a la persistencia y al Entity manager
+     */
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
 
     private static final Logger LOGGER = Logger.getLogger("/Servicio/EntradaFacadeREST");
-
+    /**
+     * Llamada a la interfaz de entrada con su anotación EJB
+     */
     @EJB
     private EntradaIntefraz entInter;
 
+    /**
+     * Constructor vacio de la fachada RESTful
+     */
     public EntradaFacadeREST() {
 
     }
 
+    /**
+     * Método POST de entrada
+     *
+     * @param entrada
+     */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Entrada entrada) {
@@ -57,6 +71,12 @@ public class EntradaFacadeREST {
 
     }
 
+    /**
+     * Método PUT de entrada
+     *
+     * @param id
+     * @param entrada
+     */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Entrada entrada) {
@@ -67,6 +87,11 @@ public class EntradaFacadeREST {
         }
     }
 
+    /**
+     * Método DELETE de entrada
+     *
+     * @param id
+     */
     @DELETE
     @Path("borrarEntrada/{id}")
     public void remove(@PathParam("id") Integer id) {
@@ -77,6 +102,12 @@ public class EntradaFacadeREST {
         }
     }
 
+    /**
+     * Método GET para filtrar entradas por su identificador (ID)
+     *
+     * @param id
+     * @return Entrada
+     */
     @GET
     @Path("buscarEntradaPorId/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -89,6 +120,11 @@ public class EntradaFacadeREST {
         }
     }
 
+    /**
+     * Método GET para ver todas las entradas
+     *
+     * @return Entrada
+     */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Entrada> findAll() {
@@ -100,6 +136,12 @@ public class EntradaFacadeREST {
         }
     }
 
+    /**
+     * Método GET para ver las entradas por una fecha en concreto
+     *
+     * @param fechaCon
+     * @return Entrada
+     */
     @GET
     @Path("verEntradasporFecha/{fechaCon}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -118,29 +160,41 @@ public class EntradaFacadeREST {
         }
     }
 
+    /**
+     * Método GET para ver las entradas por un precio en especifico
+     *
+     * @param precio
+     * @return Entrada
+     */
     @GET
     @Path("verEntradasporPrecio/{precio}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Entrada> filtrarEntradaPorPrecio(@PathParam("Float") Float precio) {
+    public List<Entrada> filtrarEntradaPorPrecio(@PathParam("precio") Float precio) {
 
         LOGGER.info("Mostrando entradas por precio");
         try {
-
             return entInter.viewEntradaByPrice(precio);
-
         } catch (ReadException e) {
-            System.out.println(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    /**
+     * Método GET que muestra las entradas que han sido compradas por un cliente
+     *
+     * @param login
+     * @return
+     */
     @GET
-    @Path("{login}")
+    @Path("verEntradaCliente/{login}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Entrada> filtrarEntradaDeUsuario(@PathParam("Usuario") Usuario usuario) {
+    public List<Entrada> filtrarEntradaDeUsuario(@PathParam("login") String login) {
+
+        LOGGER.info("Mostrando entradas de usuario");
         try {
-            return entInter.viewEntradaDeCliente(usuario);
+            return entInter.viewEntradaDeCliente(login);
         } catch (ReadException e) {
+            System.out.println(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
     }

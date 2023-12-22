@@ -14,15 +14,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
+ * Clase EJB con los métodos de la interfaz de entrada
  *
  * @author Diego.
  */
 @Stateless
 public class EntradaEJB implements EntradaIntefraz {
 
+    /**
+     * Método de persistencia del proyecto
+     */
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
 
+    /**
+     * Método EJB para crear una entrada
+     *
+     * @param entrada
+     * @throws CreateException
+     */
     @Override
     public void createEntrada(Entrada entrada) throws CreateException {
         try {
@@ -32,6 +42,12 @@ public class EntradaEJB implements EntradaIntefraz {
         }
     }
 
+    /**
+     * Método EJB para modificar una entrada
+     *
+     * @param entrada
+     * @throws UpdateException
+     */
     @Override
     public void modifyEntrada(Entrada entrada) throws UpdateException {
         try {
@@ -44,6 +60,12 @@ public class EntradaEJB implements EntradaIntefraz {
         }
     }
 
+    /**
+     * Método EJB para borrar una entrada
+     *
+     * @param entrada
+     * @throws DeleteException
+     */
     @Override
     public void deleteEntrada(Entrada entrada) throws DeleteException {
         try {
@@ -53,6 +75,11 @@ public class EntradaEJB implements EntradaIntefraz {
         }
     }
 
+    /**
+     * Método EJB para poder ver todas las entradas
+     *
+     * @throws ReadException
+     */
     @Override
     public List<Entrada> viewAllEntradas() throws ReadException {
         List<Entrada> entrada = null;
@@ -65,6 +92,12 @@ public class EntradaEJB implements EntradaIntefraz {
         return entrada;
     }
 
+    /**
+     * Método EJB para poder ver las entradas que tengan una fecha en concreto
+     *
+     * @param fecha
+     * @throws ReadException
+     */
     @Override
     public List<Entrada> viewEntradaByDate(Date fecha) throws ReadException {
         List<Entrada> entrada = null;
@@ -78,6 +111,12 @@ public class EntradaEJB implements EntradaIntefraz {
         return entrada;
     }
 
+    /**
+     * Método EJB para poder ver las entradas por el precio
+     *
+     * @param valor
+     * @throws ReadException
+     */
     @Override
     public List<Entrada> viewEntradaByPrice(Float valor) throws ReadException {
         List<Entrada> entrada = null;
@@ -92,18 +131,31 @@ public class EntradaEJB implements EntradaIntefraz {
         return entrada;
     }
 
+    /**
+     * Método EJB para poder ver las entradas del cliente
+     *
+     * @param login
+     * @return
+     * @throws ReadException
+     */
     @Override
-    public List<Entrada> viewEntradaDeCliente(Usuario usuario) throws ReadException {
+    public List<Entrada> viewEntradaDeCliente(String login) throws ReadException {
         List<Entrada> entrada = null;
         try {
             entrada
-                    = em.createNamedQuery("verEntradaCliente").setParameter("login", usuario).getResultList();
+                    = em.createNamedQuery("verEntradaCliente").setParameter("login", login).getResultList();
         } catch (Exception e) {
             throw new ReadException(e.getMessage());
         }
         return entrada;
     }
 
+    /**
+     * Método EJB para filtrar una entrada por su identificador (ID)
+     *
+     * @param id
+     * @throws ReadException
+     */
     @Override
     public Entrada filtrarEntradaPorID(Integer id) throws ReadException {
         Entrada entrada;
