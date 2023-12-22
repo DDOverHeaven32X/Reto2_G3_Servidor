@@ -34,7 +34,7 @@ public interface AnimalInterfaz {
     
     public List<Animal> viewEspecies() throws ReadException;
     
-    public List<Animal> viewAnimalesDeUnaZona(Integer zona) throws ReadException;
+    public List<Animal> viewAnimalesDeUnaZona(Zona zona) throws ReadException;
     
     public Animal filtrarAnimalPorID(Integer id) throws ReadException;
 }

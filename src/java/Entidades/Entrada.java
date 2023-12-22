@@ -3,6 +3,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,10 +49,10 @@ public class Entrada implements Serializable {
     private Date fecha_entrada;
     @Column(nullable = false)
     private Float precio;
-    @OneToMany(mappedBy = "entrada")
+    @OneToMany(mappedBy = "entrada", cascade = ALL)
     private Set<Compra> listaCompras;
     @Column(nullable = false)
-    @ManyToMany(mappedBy = "listaEntradas")
+    @ManyToMany(mappedBy = "listaEntradas", cascade = ALL)
     private Set<Zona> listaZonas;
     @ManyToOne
     private Admin admin;

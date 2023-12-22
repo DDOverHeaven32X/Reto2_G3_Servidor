@@ -2,6 +2,7 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,7 @@ public class Compra implements Serializable {
     @ManyToOne
     private Cliente cliente;
     @MapsId("id_entrada")
-    @ManyToOne
+    @ManyToOne(cascade=ALL)
     private Entrada entrada;
 
     public CompraId getCompraId() {

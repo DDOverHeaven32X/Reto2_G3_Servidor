@@ -28,9 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     ,
     @NamedQuery(name = "visualizarAnimalesPorAlimentacion", query = "SELECT a FROM Animal a WHERE a.alimentacion = :alimentacion")
     ,
-    @NamedQuery(name = "listarEspecies", query = "SELECT DISTINCT a.especie FROM Animal a")
+    @NamedQuery(name = "listarEspecies", query = "SELECT DISTINCT a.especie, a FROM Animal a")
     ,
-    @NamedQuery(name = "visualizarAnimalesDeUnaZona", query = "SELECT a FROM Animal a WHERE a.zona.id_zona = :id_zona")
+    @NamedQuery(name = "visualizarAnimalesDeUnaZona", query = "SELECT a FROM Animal a WHERE a.zona = :zona")
 })
 @XmlRootElement
 public class Animal implements Serializable {

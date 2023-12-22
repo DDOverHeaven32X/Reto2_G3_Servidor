@@ -94,13 +94,15 @@ public class AnimalEJB implements AnimalInterfaz{
         try {
             animales = em.createNamedQuery("listarEspecies").getResultList();
         } catch (Exception e) {
+            
+            System.out.println(e.getMessage());
             throw new ReadException(e.getMessage());
         }
         return animales;
     }
 
     @Override
-    public List<Animal> viewAnimalesDeUnaZona(Integer zona) throws ReadException {
+    public List<Animal> viewAnimalesDeUnaZona(Zona zona) throws ReadException {
         List<Animal> animales=null;
         try {
             animales = em.createNamedQuery("visualizarAnimalesDeUnaZona").setParameter("zona", zona).getResultList();

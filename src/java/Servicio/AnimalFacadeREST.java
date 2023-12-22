@@ -7,7 +7,6 @@ package Servicio;
 
 import Entidades.Alimentacion;
 import Entidades.Animal;
-import Entidades.Zona;
 import Excepciones.CreateException;
 import Excepciones.DeleteException;
 import Excepciones.ReadException;
@@ -42,6 +41,8 @@ public class AnimalFacadeREST {
 
     @EJB
     private AnimalInterfaz ainter;
+    @EJB
+    private ZonaInterfaz zinter;
     
     public AnimalFacadeREST() {
         
@@ -95,7 +96,6 @@ public class AnimalFacadeREST {
         try {
             return ainter.readAnimal();
         } catch (ReadException e) {
-            System.out.println(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
     }
@@ -138,8 +138,9 @@ public class AnimalFacadeREST {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Animal> findAnimalsInAnArea(@PathParam("zona") Integer zona) {
         try {
-            return ainter.viewAnimalesDeUnaZona(zona);
+            return ainter.viewAnimalesDeUnaZona(zinter.viewById(zona));
         } catch (ReadException e) {
+            LOGGER.info(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
     }
