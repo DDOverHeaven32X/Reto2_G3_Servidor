@@ -1,5 +1,7 @@
 package Entidades;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.EmbeddedId;
@@ -28,6 +30,8 @@ public class Compra implements Serializable {
     @EmbeddedId
     private CompraId compraId;
     @Temporal(TemporalType.DATE)
+    @JsonSerialize(as = Date.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date fecha_compra;
     @MapsId("id_user")
     @ManyToOne

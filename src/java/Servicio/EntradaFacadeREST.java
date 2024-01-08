@@ -1,19 +1,16 @@
 package Servicio;
 
 import Entidades.Entrada;
-import Entidades.Usuario;
 import Excepciones.CreateException;
 import Excepciones.DeleteException;
 import Excepciones.ReadException;
 import Excepciones.UpdateException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -56,9 +53,9 @@ public class EntradaFacadeREST {
     }
 
     /**
-     * Método POST de entrada
+     * Método POST de entrada, crea una entrada nueva
      *
-     * @param entrada
+     * @param entrada, instancia de la entidad entrada
      */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -72,10 +69,10 @@ public class EntradaFacadeREST {
     }
 
     /**
-     * Método PUT de entrada
+     * Método PUT de entrada, permite modificar una entrada
      *
-     * @param id
-     * @param entrada
+     * @param id, se modifica la entrada en base a su id
+     * @param entrada, instancia de la entidad Entrada
      */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -88,9 +85,9 @@ public class EntradaFacadeREST {
     }
 
     /**
-     * Método DELETE de entrada
+     * Método DELETE de entrada, permite borrar una entrada
      *
-     * @param id
+     * @param id, se borra la entrada en base a su id
      */
     @DELETE
     @Path("borrarEntrada/{id}")
@@ -105,8 +102,8 @@ public class EntradaFacadeREST {
     /**
      * Método GET para filtrar entradas por su identificador (ID)
      *
-     * @param id
-     * @return Entrada
+     * @param id, filtra entradas en base a su id
+     * @return Entrada, devuelve un objeto Entrada
      */
     @GET
     @Path("buscarEntradaPorId/{id}")
@@ -123,7 +120,7 @@ public class EntradaFacadeREST {
     /**
      * Método GET para ver todas las entradas
      *
-     * @return Entrada
+     * @return Entrada, devuelve una lista de entradas
      */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -139,8 +136,8 @@ public class EntradaFacadeREST {
     /**
      * Método GET para ver las entradas por una fecha en concreto
      *
-     * @param fechaCon
-     * @return Entrada
+     * @param fechaCon, muestra las fechas especificadas
+     * @return Entrada, devuelve una lista de entradas
      */
     @GET
     @Path("verEntradasporFecha/{fechaCon}")
@@ -163,8 +160,9 @@ public class EntradaFacadeREST {
     /**
      * Método GET para ver las entradas por un precio en especifico
      *
-     * @param precio
-     * @return Entrada
+     * @param precio, muestra entradas con dicho precio
+     * @return Entrada, devuelve una lista de entradas con el precio
+     * especificado
      */
     @GET
     @Path("verEntradasporPrecio/{precio}")
@@ -182,8 +180,8 @@ public class EntradaFacadeREST {
     /**
      * Método GET que muestra las entradas que han sido compradas por un cliente
      *
-     * @param login
-     * @return
+     * @param login, muestra entradas de un usuario especifico
+     * @return Entrada, devuelve una lista de entradas de un cliente especifico
      */
     @GET
     @Path("verEntradaCliente/{login}")
@@ -199,6 +197,11 @@ public class EntradaFacadeREST {
         }
     }
 
+    /**
+     * Getter del entity manager
+     *
+     * @return em, devuelve un objeto entity manager
+     */
     protected EntityManager getEntityManager() {
         return em;
     }
