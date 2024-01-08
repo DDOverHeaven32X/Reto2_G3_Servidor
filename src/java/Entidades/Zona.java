@@ -25,14 +25,25 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Zona", schema = "parquedb")
 @NamedQueries({
+    /**
+     * Query que lista todas las zonas disponibles.
+     */
     @NamedQuery(name = "verTodasLasZonas", query = "SELECT z FROM Zona z ORDER BY z.id_zona ASC")
     ,
-    
+    /**
+     * Query que filtra las zonas por nombre.
+     */
     @NamedQuery(name = "filtrarPorZona", query = "SELECT z FROM Zona z WHERE z.nombre = :nombre")
     ,
+    /**
+     * Query que filtra las zonas por el tipo animal.
+     */
     @NamedQuery(name = "filtrarPorTipoAnimal",
             query = "SELECT z FROM Zona z WHERE z.tipo_animal = :tipo_animal")
     ,
+    /**
+     * Query que lista las zonas por entrada.
+     */
     @NamedQuery(name = "mostrarZonasPorEntrada",
             query = "SELECT z FROM Zona z JOIN z.listaEntradas e WHERE e.id_entrada = :id_entrada")
 })
