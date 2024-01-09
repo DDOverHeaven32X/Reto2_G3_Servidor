@@ -12,6 +12,7 @@ import Excepciones.DeleteException;
 import Excepciones.ReadException;
 import Excepciones.UpdateException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
@@ -26,80 +27,139 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 
 /**
+ * Fachada RESTful del lado servidor de la entidad Animal
  *
  * @author Adrian
  */
 @Path("entidades.animal")
 public class AnimalFacadeREST {
 
+    /**
+     * Llamada a la persistencia y Entity Manager
+     */
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
-    
+
     private static final Logger LOGGER = Logger.getLogger("/Servicio/AnimalFacadeREST");
 
+    /**
+     * Llamada a la interfaz de animal con su anotacion EJB
+     */
     @EJB
     private AnimalInterfaz ainter;
+    /**
+     * Llamada a la interfaz de zona con su anotacion EJB
+     */
     @EJB
     private ZonaInterfaz zinter;
-    
+
+    /**
+     * Constructor vacio
+     */
     public AnimalFacadeREST() {
-        
+
     }
 
+    /**
+     * Metodo para insertar animales a la base de datos
+     *
+     * @param animal (Objeto animal)
+     */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Animal animal) {
         try {
             ainter.createAnimal(animal);
         } catch (CreateException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    /**
+     * Metodo para modificar los datos de una animal de la base de datos
+     *
+     * @param id (Atributo primario de animal)
+     * @param animal (Objeto Animal)
+     */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Animal animal) {
+    public void edit(@PathParam("id_animal") Integer id, Animal animal) {
         try {
             ainter.updateAnimal(animal);
         } catch (UpdateException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    /**
+     * Metodo para eliminar animales de la base de datos
+     *
+     * @param id (Atributo primario de animal)
+     */
     @DELETE
-    @Path("borrar/{id}")
-    public void remove(@PathParam("id") Integer id) {
+    @Path("borrar/{id_animal}")
+    public void remove(@PathParam("id_animal") Integer id) {
         try {
-            ainter.deleteAnimal(ainter.filtrarAnimalPorID(id));
-        } catch (DeleteException | ReadException e) {
-            LOGGER.info(e.getMessage());
-            throw new InternalServerErrorException(e.getMessage());
+            Animal animalToDelete = ainter.filtrarAnimalPorID(id);
+            if (animalToDelete != null) {
+                ainter.deleteAnimal(animalToDelete);
+            } else {
+                throw new NotFoundException("Animal con ID " + id + " no encontrado.");
+            }
+        } catch (DeleteException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            throw new InternalServerErrorException(ex.getMessage());
+        } catch (ReadException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            throw new InternalServerErrorException(ex.getMessage());
         }
     }
 
+    /**
+     * Metodo para buscar los animales por el ID en la base de datos
+     *
+     * @param id (atributo primario de animal)
+     * @return Animal (Objeto animal)
+     */
     @GET
-    @Path("buscarPorID/{id}")
+    @Path("buscarPorID/{id_animal}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Animal find(@PathParam("id") Integer id) {
+    public Animal find(@PathParam("id_animal") Integer id) {
         try {
             return ainter.filtrarAnimalPorID(id);
         } catch (ReadException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    /**
+     * Metodo que te devuelve todos los animales de la base de datos
+     *
+     * @return Animal (Objeto animal)
+     */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Animal> findAll() {
         try {
             return ainter.readAnimal();
         } catch (ReadException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    /**
+     * Metodo para filtrar los animales por la especie
+     *
+     * @param especie (Atributo de animal)
+     * @return Animal (Objeto animal)
+     */
     @GET
     @Path("visualizarAnimalesPorEspecie/{especie}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -107,10 +167,17 @@ public class AnimalFacadeREST {
         try {
             return ainter.viewAnimalByEspecie(especie);
         } catch (ReadException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
-    
+
+    /**
+     * Metodo para filtrar los animales por el tipo de alimentacion
+     *
+     * @param alimentacion (Atributo de animal)
+     * @return Animal (Objeto animal)
+     */
     @GET
     @Path("visualizarAnimalesPorAlimentacion/{alimentacion}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -118,21 +185,44 @@ public class AnimalFacadeREST {
         try {
             return ainter.viewAnimalByAlimentacion(alimentacion);
         } catch (ReadException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
-    
+
+    /**
+     * Metodo para listar todas las especies distintas que hay registradas en la
+     * BD
+     *
+     * En lugar de devolver directamente objetos Animal desde el servicio,
+     * creamos un DTO (Data Transfer Object) específico para la lista de
+     * especies. Esto puede ayudar a evitar problemas de serialización.
+     *
+     * @return dto (Data Tranfer Object para listar especies de animales)
+     */
     @GET
     @Path("listarEspecies")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Animal> findSpecies() {
+    public EspeciesDTO findSpecies() {
         try {
-            return ainter.viewEspecies();
+            List<String> especies = ainter.viewEspecies();
+            EspeciesDTO dto = new EspeciesDTO(especies);
+            return dto;
         } catch (ReadException e) {
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
-    
+
+    /**
+     * Metodo para ver todos los animales de una zona seleccionada.
+     *
+     * Para la ejecucion del metodo es nacesario acceder a los metodos de zona
+     * para saber cual ha sido seleccionada
+     *
+     * @param zona (Atributo zona del objeto Animal)
+     * @return Animal (Objeto animal)
+     */
     @GET
     @Path("visualizarAnimalesDeUnaZona/{zona}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -140,29 +230,18 @@ public class AnimalFacadeREST {
         try {
             return ainter.viewAnimalesDeUnaZona(zinter.viewById(zona));
         } catch (ReadException e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
         }
     }
-    
-    /*
-    @GET
-    @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Animal> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        
-    }
 
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String countREST() {
-        
-    }
-    */
-
+    /**
+     * Getter del Entity Manager
+     * 
+     * @return em (devuelve un objeto Entity Manager) 
+     */
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
