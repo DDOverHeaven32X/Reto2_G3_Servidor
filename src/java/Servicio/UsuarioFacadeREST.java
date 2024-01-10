@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Servicio;
 
 import Entidades.Usuario;
@@ -17,7 +22,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  *
- * @author Jason.
+ * @author 2dam
  */
 @Stateless
 @Path("entidades.usuario")
@@ -82,5 +87,5 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
 }

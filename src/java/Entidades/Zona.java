@@ -15,7 +15,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -26,14 +25,16 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Zona", schema = "parquedb")
 @NamedQueries({
+    @NamedQuery(name = "verTodasLasZonas", query = "SELECT z FROM Zona z ORDER BY z.id_zona ASC")
+    ,
+    
     @NamedQuery(name = "filtrarPorZona", query = "SELECT z FROM Zona z WHERE z.nombre = :nombre")
     ,
-    @NamedQuery(name = "filtrarPorTipoAnimal",
-            query = "SELECT z FROM Zona z WHERE z.tipo_animal = :tipo_animal")
+    @NamedQuery(name = "filtrarPorTipoAnimal", query = "SELECT z FROM Zona z WHERE z.tipo_animal = :tipo_animal")
     ,
-    @NamedQuery(name = "mostrarZonasPorEntrada",
-            query = "SELECT z FROM Zona z JOIN z.listaEntradas e WHERE e.id_entrada = :id_entrada")
+    @NamedQuery(name = "mostrarZonasPorEntrada", query = "SELECT z FROM Zona z JOIN z.listaEntradas e WHERE e.id_entrada = :id_entrada")
 })
+
 @XmlRootElement
 public class Zona implements Serializable {
 

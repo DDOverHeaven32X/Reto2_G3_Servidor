@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,6 +61,7 @@ import javax.xml.bind.annotation.XmlTransient;
      */
     @NamedQuery(name = "filtrarEntradaPorId", query = "SELECT e FROM Entrada e ")
 })
+
 @XmlRootElement
 public class Entrada implements Serializable {
 
@@ -77,10 +79,10 @@ public class Entrada implements Serializable {
     private Date fecha_entrada;
     @Column(nullable = false)
     private Float precio;
-    @OneToMany(mappedBy = "entrada")
+    @OneToMany(mappedBy = "entrada", cascade = ALL)
     private Set<Compra> listaCompras;
     @Column(nullable = false)
-    @ManyToMany(mappedBy = "listaEntradas")
+    @ManyToMany(mappedBy = "listaEntradas", cascade = ALL)
     private Set<Zona> listaZonas;
     @ManyToOne
     private Admin admin;

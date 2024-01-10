@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Servicio;
 
 import Entidades.Compra;
@@ -19,7 +24,7 @@ import javax.ws.rs.core.PathSegment;
 
 /**
  *
- * @author Jason.
+ * @author 2dam
  */
 @Stateless
 @Path("entidades.compra")
@@ -107,5 +112,5 @@ public class CompraFacadeREST extends AbstractFacade<Compra> {
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
 }
