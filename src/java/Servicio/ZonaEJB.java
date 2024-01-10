@@ -34,11 +34,8 @@ public class ZonaEJB implements ZonaInterfaz {
      */
     @Override
     public void createZona(Zona zona) throws CreateException {
-        //Metodo para  crear entrenamientos.
+        //Metodo para  crear Zonas
         try {
-            if (zona.getId_zona() == null) {
-                em.merge(zona);
-            }
             em.persist(zona);
         } catch (Exception e) {
             throw new CreateException(e.getMessage());
