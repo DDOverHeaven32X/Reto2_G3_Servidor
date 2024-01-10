@@ -40,12 +40,18 @@ public class ZonaFacadeREST {
     @EJB
     private ZonaInterfaz zonaInter;
 
-    Zona zona = new Zona();
-
     public ZonaFacadeREST() {
         // super(Usuario.class);
     }
 
+    /**
+     * Crea una nueva zona a partir de datos en formato XML o JSON.
+     *
+     * @param zona La zona que se va a crear.
+     * @throws InternalServerErrorException Si ocurre un error interno del
+     * servidor durante la creación.
+     *
+     */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Zona zona) {
@@ -57,6 +63,15 @@ public class ZonaFacadeREST {
         }
     }
 
+    /**
+     * Actualiza una zona en formato XML o JSON a partir de un indentificador.
+     *
+     * @param idZona La id de la zona que se va a actualizar.
+     * @param zona La zona que se va a actualizar.
+     * @throws InternalServerErrorException Si ocurre un error interno del
+     * servidor durante la creación.
+     *
+     */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id_zona") Integer idZona, Zona zona) {
@@ -68,6 +83,14 @@ public class ZonaFacadeREST {
         }
     }
 
+    /**
+     * Elimina una zona en formato XML o JSON a partir de un identificardor.
+     *
+     * @param idZona La id de la zona que se va a eliminar.
+     * @throws InternalServerErrorException Si ocurre un error interno del
+     * servidor durante la creación.
+     *
+     */
     @DELETE
     @Path("deleteZona/{id_zona}")
     public void remove(@PathParam("id_zona") Integer idZona) {
@@ -80,6 +103,14 @@ public class ZonaFacadeREST {
         }
     }
 
+    /**
+     * Recupera una zona por su identificador.
+     *
+     * @param idZona Identificador de la zona.
+     * @return La zona correspondiente al identificador.
+     * @throws InternalServerErrorException Si hay un error interno del servidor
+     * durante la operación.
+     */
     @GET
     @Path("getId_zona/{id_zona}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -93,6 +124,14 @@ public class ZonaFacadeREST {
         }
     }
 
+    /**
+     * Recupera una lista de zonas por su nombre.
+     *
+     * @param nombreZona Nombre de la zona.
+     * @return Lista de zonas con el nombre proporcionado.
+     * @throws InternalServerErrorException Si hay un error interno del servidor
+     * durante la operación.
+     */
     @GET
     @Path("getNombre/{nombre}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -106,6 +145,14 @@ public class ZonaFacadeREST {
         }
     }
 
+    /**
+     * Recupera una lista de zonas por el tipo de animal.
+     *
+     * @param tipoAnimal Tipo de animal de la zona.
+     * @return Lista de zonas del tipo de animal especificado.
+     * @throws InternalServerErrorException Si hay un error interno del servidor
+     * durante la operación.
+     */
     @GET
     @Path("getTipo_animal/{tipo_animal}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -119,6 +166,13 @@ public class ZonaFacadeREST {
         }
     }
 
+    /**
+     * Recupera todas las zonas disponibles.
+     *
+     * @return Lista de todas las zonas.
+     * @throws InternalServerErrorException Si hay un error interno del servidor
+     * durante la operación.
+     */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Zona> findAll() {
@@ -146,6 +200,11 @@ public class ZonaFacadeREST {
     public String countREST() {
         return String.valueOf(super.count());
     }*/
+    /**
+     * Es un getter que devuelve un objeto EnitityManager
+     *
+     * @return Devuelve un objeto EntityManager
+     */
     protected EntityManager getEntityManager() {
         return em;
     }

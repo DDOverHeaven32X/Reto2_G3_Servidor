@@ -126,6 +126,14 @@ public class ZonaEJB implements ZonaInterfaz {
         return zonas;
     }
 
+    /**
+     * Visualiza la zona asociada a una entrada específica.
+     *
+     * @param entrada Entrada de la zona que se desea visualizar.
+     * @return La zona correspondiente a la entrada proporcionada.
+     * @throws ReadException Si ocurre un error durante el proceso de
+     * actualización.
+     */
     @Override
     public Zona viewZonaByEntrada(String entrada) throws ReadException {
         Zona zona;

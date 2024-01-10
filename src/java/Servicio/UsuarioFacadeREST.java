@@ -6,13 +6,16 @@
 package Servicio;
 
 import Entidades.Usuario;
+import Excepciones.ReadException;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -24,22 +27,25 @@ import javax.ws.rs.core.MediaType;
  *
  * @author 2dam
  */
-@Stateless
+
 @Path("entidades.usuario")
-public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
+public class UsuarioFacadeREST extends AbstractFacade<Usuario>{
 
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
+
+    @EJB
+    private UsuarioInterfaz usuarioInter;
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
     }
 
     @POST
-    @Override
+
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Usuario entity) {
-        super.create(entity);
+    public void createUsuario(Usuario usuario) {
+       super.create(usuario);
     }
 
     @PUT
@@ -54,12 +60,16 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
-
     @GET
-    @Path("{id}")
+    @Path("VerUsuariosPorLoginyContra/{login}/{contraseña}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Usuario find(@PathParam("id") Integer id) {
-        return super.find(id);
+    public List<Usuario> find(@PathParam("login") String login, @PathParam("contraseña") String contraseña) {
+        try {
+            return usuarioInter.viewByLoginContraseña(login, contraseña);
+        } catch (ReadException ex) {
+            System.out.println(ex.getMessage());
+            throw new InternalServerErrorException(ex.getMessage());
+        }
     }
 
     @GET
@@ -82,10 +92,9 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-
-    @Override
+   
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
