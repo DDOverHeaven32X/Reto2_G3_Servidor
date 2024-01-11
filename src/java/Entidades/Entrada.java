@@ -8,6 +8,7 @@ import java.util.Set;
 import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -82,7 +83,7 @@ public class Entrada implements Serializable {
     @OneToMany(mappedBy = "entrada", cascade = ALL)
     private Set<Compra> listaCompras;
     @Column(nullable = false)
-    @ManyToMany(mappedBy = "listaEntradas", cascade = ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "listaEntradas", cascade = ALL)
     private Set<Zona> listaZonas;
     @ManyToOne
     private Admin admin;
@@ -165,7 +166,6 @@ public class Entrada implements Serializable {
      *
      * @return listaZonas
      */
-    @XmlTransient
     public Set<Zona> getListaZonas() {
         return listaZonas;
     }
