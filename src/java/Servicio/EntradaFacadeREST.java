@@ -68,6 +68,7 @@ public class EntradaFacadeREST {
         try {
             entInter.createEntrada(entrada);
         } catch (CreateException e) {
+            System.out.println(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
         }
 
@@ -210,5 +211,5 @@ public class EntradaFacadeREST {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

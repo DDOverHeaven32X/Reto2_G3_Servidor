@@ -79,12 +79,12 @@ public class Entrada implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date fecha_entrada;
     @Column(nullable = false)
+    private String tipo_entrada;
+    @Column(nullable = false)
     private Float precio;
     @OneToMany(mappedBy = "entrada", cascade = ALL)
     private Set<Compra> listaCompras;
-    @Column(nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "listaEntradas", cascade = ALL)
-    private Set<Zona> listaZonas;
+
     @ManyToOne
     private Admin admin;
 
@@ -162,24 +162,6 @@ public class Entrada implements Serializable {
     }
 
     /**
-     * Getter de la lista de zonas
-     *
-     * @return listaZonas
-     */
-    public Set<Zona> getListaZonas() {
-        return listaZonas;
-    }
-
-    /**
-     * Setter de la lista de Zonas
-     *
-     * @param listaZonas
-     */
-    public void setListaZonas(Set<Zona> listaZonas) {
-        this.listaZonas = listaZonas;
-    }
-
-    /**
      * Getter de admin
      *
      * @return admin
@@ -195,6 +177,24 @@ public class Entrada implements Serializable {
      */
     public void setAdmin(Admin admin) {
         this.admin = admin;
+    }
+
+    /**
+     * Getter de admin
+     *
+     * @return tipo_entrada
+     */
+    public String getTipo_entrada() {
+        return tipo_entrada;
+    }
+
+    /**
+     * Setter de admin
+     *
+     * @param tipo_entrada
+     */
+    public void setTipo_entrada(String tipo_entrada) {
+        this.tipo_entrada = tipo_entrada;
     }
 
     /**

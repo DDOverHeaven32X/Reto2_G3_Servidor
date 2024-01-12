@@ -1,6 +1,7 @@
 package Servicio;
 
 import Entidades.Entrada;
+import Entidades.Zona;
 import Excepciones.CreateException;
 import Excepciones.DeleteException;
 import Excepciones.ReadException;
