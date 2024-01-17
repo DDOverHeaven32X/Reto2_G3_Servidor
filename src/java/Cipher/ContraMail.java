@@ -2,22 +2,16 @@ package Cipher;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.nio.file.Files;
 import java.security.SecureRandom;
-import java.security.spec.KeySpec;
-import java.util.Arrays;
+
 import java.util.Date;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
+
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -44,18 +38,19 @@ public class ContraMail {
     private static final Logger LOGGER = java.util.logging.Logger.getLogger("/Cipher/ContraMail");
 
     public String sendMail(String mailUser) {
+        Simetrico simi = new Simetrico();
         final ResourceBundle bundle = ResourceBundle.getBundle("Cipher.emailCreedentials");
 
         final String correoCipher = bundle.getString("EMAILCIFRADO");
         final String contraCipher = bundle.getString("CONTRACIFRADA");
 
         try {
-            client = descifrarTexto("Clave", "client");
+            client = simi.descifrarTexto("Clave", "client");
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
         try {
-            contraMail = descifrarTexto("Clave", "contra");
+            contraMail = simi.descifrarTexto("Clave", "contra");
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
@@ -104,48 +99,6 @@ public class ContraMail {
 
         return nuevaContra;
 
-    }
-
-    public String descifrarTexto(String clave, String mensajeCifrado) throws IOException {
-        String ret = null;
-        byte[] fileContent = null;
-
-        if (mensajeCifrado.equals("client")) {
-            InputStream is = getClass().getResourceAsStream("mail.dat");
-            fileContent = new byte[is.available()];
-            is.read(fileContent, 0, is.available());
-        } else {
-            InputStream is = getClass().getResourceAsStream("contra.dat");
-            fileContent = new byte[is.available()];
-            is.read(fileContent, 0, is.available());
-        }
-
-        KeySpec kys = null;
-        SecretKeyFactory skf = null;
-
-        try {
-
-            kys = new PBEKeySpec(clave.toCharArray(), salt, 65536, 128);
-
-            skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-            byte[] key = skf.generateSecret(kys).getEncoded();
-
-            SecretKey privateKey = new SecretKeySpec(key, 0, key.length, "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-
-            IvParameterSpec ivParam = new IvParameterSpec(Arrays.copyOfRange(fileContent, 0, 16));
-
-            cipher.init(Cipher.DECRYPT_MODE, privateKey, ivParam);
-
-            byte[] decodedMessage = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
-
-            ret = new String(decodedMessage);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, null, e);
-        }
-        return ret;
     }
 
     public String randomPasswordGenerator(Integer len) {
