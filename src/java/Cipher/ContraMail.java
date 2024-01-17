@@ -44,16 +44,8 @@ public class ContraMail {
         final String correoCipher = bundle.getString("EMAILCIFRADO");
         final String contraCipher = bundle.getString("CONTRACIFRADA");
 
-        try {
-            client = simi.descifrarTexto("Clave", "client");
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, null, e);
-        }
-        try {
-            contraMail = simi.descifrarTexto("Clave", "contra");
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, null, e);
-        }
+        client = simi.descifrarTexto("Clave", "client");
+        contraMail = simi.descifrarTexto("Clave", "contra");
 
         final String recibido = mailUser;
         final String nuevaContra = randomPasswordGenerator(Integer.parseInt(bundle.getString("MINIMALPASSWORDCHARACTERS")));

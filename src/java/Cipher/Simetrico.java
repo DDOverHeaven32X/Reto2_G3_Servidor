@@ -5,106 +5,82 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Base64;
+import java.util.ResourceBundle;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * Clase que contiene el cifrado asimetrico
- *
- * @author Diego.
- */
 public class Simetrico {
 
-    private static byte[] salt = "esta es la salt!".getBytes();
+    private static final byte[] salt = generateSalt();
 
-    private static final Logger LOGGER = java.util.logging.Logger.getLogger("/Cipher/Simetrico");
+    private static byte[] generateSalt() {
+        // Genera la sal de manera segura
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return salt;
+    }
 
-    public String cifrarTexto(String clave, String mensaje) {
+    public String cifrarTexto(String clave, String texto, String nombreArchivo) {
         String ret = null;
         KeySpec derivedKey = null;
         SecretKeyFactory secretKeyFactory = null;
+
         try {
-
             derivedKey = new PBEKeySpec(clave.toCharArray(), salt, 65536, 128);
-
             secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
             byte[] derivedKeyPBK = secretKeyFactory.generateSecret(derivedKey).getEncoded();
-
             SecretKey derivedKeyPBK_AES = new SecretKeySpec(derivedKeyPBK, 0, derivedKeyPBK.length, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, derivedKeyPBK_AES);
-            byte[] encodedMessage = cipher.doFinal(mensaje.getBytes());
+
+            byte[] encodedMessage = cipher.doFinal(texto.getBytes());
             byte[] iv = cipher.getIV();
-
             byte[] combined = concatArrays(iv, encodedMessage);
-
-            fileWriter("C:\\claves\\EjemploAES.dat", combined);
-
-            ret = new String(encodedMessage);
-
-        } catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
-
+            fileWriter("c:\\claves\\cifrado.dat", combined);
+            ret = Base64.getEncoder().encodeToString(encodedMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return ret;
     }
 
-    public String descifrarTexto(String clave, String mensajeCifrado) throws IOException {
+    public String descifrarTexto(String clave, String nombreArchivo) {
         String ret = null;
-        byte[] fileContent = null;
+        byte[] fileContent = fileReader("c:\\claves\\cifrado.dat");
 
-        if (mensajeCifrado.equals("client")) {
-            InputStream is = getClass().getResourceAsStream("C:\\claves\\mail.dat");
-            fileContent = new byte[is.available()];
-            is.read(fileContent, 0, is.available());
-        } else {
-            InputStream is = getClass().getResourceAsStream("C:\\claves\\contra.dat");
-            fileContent = new byte[is.available()];
-            is.read(fileContent, 0, is.available());
-        }
-
-        KeySpec kys = null;
-        SecretKeyFactory skf = null;
+        KeySpec keySpec = null;
+        SecretKeyFactory secretKeyFactory = null;
 
         try {
+            keySpec = new PBEKeySpec(clave.toCharArray(), salt, 65536, 128);
+            secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
-            kys = new PBEKeySpec(clave.toCharArray(), salt, 65536, 128);
-
-            skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-            byte[] key = skf.generateSecret(kys).getEncoded();
-
+            byte[] key = secretKeyFactory.generateSecret(keySpec).getEncoded();
             SecretKey privateKey = new SecretKeySpec(key, 0, key.length, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-
             IvParameterSpec ivParam = new IvParameterSpec(Arrays.copyOfRange(fileContent, 0, 16));
 
             cipher.init(Cipher.DECRYPT_MODE, privateKey, ivParam);
-
             byte[] decodedMessage = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
 
             ret = new String(decodedMessage);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return ret;
     }
@@ -116,26 +92,15 @@ public class Simetrico {
         return ret;
     }
 
-    /**
-     * Escribe un fichero
-     *
-     * @param path Path del fichero
-     * @param text Texto a escibir
-     */
     private void fileWriter(String path, byte[] text) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
             fos.write(text);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Retorna el contenido de un fichero
-     *
-     * @param path Path del fichero
-     * @return El texto del fichero
-     */
     private byte[] fileReader(String path) {
         byte ret[] = null;
         File file = new File(path);
@@ -148,17 +113,22 @@ public class Simetrico {
     }
 
     public static void main(String[] args) {
-        Simetrico ejemploAES = new Simetrico();
-        KeyGenerator key = new KeyGenerator();
-        key.keyGenerator();
-        String mensajeCifrado = ejemploAES.cifrarTexto("Clave", "Mensaje super secreto");
-        System.out.println("Cifrado! -> " + mensajeCifrado);
+        final ResourceBundle bundle = ResourceBundle.getBundle("Cipher.emailCreedentials");
+        Simetrico sim = new Simetrico();
+        KeyGenerator cla = new KeyGenerator();
+        final String email = bundle.getString("EMAIL");
+        final String contra = bundle.getString("CONTRASEÑA");
+        cla.keyGenerator();
+
         System.out.println("-----------");
-        try {
-            System.out.println("Descifrado! -> " + ejemploAES.descifrarTexto("Clave", mensajeCifrado));
-        } catch (IOException ex) {
-            Logger.getLogger(Simetrico.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String mensajeCifradoEmail = sim.cifrarTexto("Clave", email, "email");
+        System.out.println("Descifrado Email -> " + sim.descifrarTexto("Clave", "email"));
+        String mensajeCifradoContra = sim.cifrarTexto("Clave", contra, "contraseña");
+        System.out.println("Descifrado Contraseña -> " + sim.descifrarTexto("Clave", "contraseña"));
+
+        System.out.println("Cifrado Email -> " + mensajeCifradoEmail);
+        System.out.println("Cifrado Contraseña -> " + mensajeCifradoContra);
         System.out.println("-----------");
+
     }
 }
