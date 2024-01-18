@@ -31,6 +31,7 @@ public class ContraMail {
     private static byte[] salt = sSalt.getBytes();
     String client = null;
     String contraMail = null;
+    Integer caracteresMinimos = 8;
     final String ZOHO_HOST = "smtp.zoho.eu";
     final String TLS_PORT = "897";
     final String SENDER_USERNAME = "2024g3_reto2@zohomail.eu";
@@ -39,16 +40,12 @@ public class ContraMail {
 
     public String sendMail(String mailUser) {
         Simetrico simi = new Simetrico();
-        final ResourceBundle bundle = ResourceBundle.getBundle("Cipher.emailCreedentials");
-
-        final String correoCipher = bundle.getString("EMAILCIFRADO");
-        final String contraCipher = bundle.getString("CONTRACIFRADA");
 
         client = simi.descifrarTexto("Clave", "client");
         contraMail = simi.descifrarTexto("Clave", "contra");
 
         final String recibido = mailUser;
-        final String nuevaContra = randomPasswordGenerator(Integer.parseInt(bundle.getString("MINIMALPASSWORDCHARACTERS")));
+        final String nuevaContra = randomPasswordGenerator(caracteresMinimos);
 
         Properties props = System.getProperties();
         props.setProperty("mail.smtps.host", ZOHO_HOST);

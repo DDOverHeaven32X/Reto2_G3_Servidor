@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public class Simetrico {
             byte[] encodedMessage = cipher.doFinal(texto.getBytes());
             byte[] iv = cipher.getIV();
             byte[] combined = concatArrays(iv, encodedMessage);
-            fileWriter("c:\\claves\\cifrado.dat", combined);
+            fileWriter("c:\\Cifrado\\credential.properties", combined);
             ret = Base64.getEncoder().encodeToString(encodedMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,7 +61,8 @@ public class Simetrico {
 
     public String descifrarTexto(String clave, String nombreArchivo) {
         String ret = null;
-        byte[] fileContent = fileReader("c:\\claves\\cifrado.dat");
+        byte[] fileContent = fileReader("c:\\Cifrado\\credential.properties");
+        byte[] fileKey = fileReader("c:\\Cifrado\\privateKey.der");
 
         KeySpec keySpec = null;
         SecretKeyFactory secretKeyFactory = null;
@@ -73,7 +75,7 @@ public class Simetrico {
             SecretKey privateKey = new SecretKeySpec(key, 0, key.length, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            IvParameterSpec ivParam = new IvParameterSpec(Arrays.copyOfRange(fileContent, 0, 16));
+            IvParameterSpec ivParam = new IvParameterSpec(Arrays.copyOfRange(fileKey, 0, 16));
 
             cipher.init(Cipher.DECRYPT_MODE, privateKey, ivParam);
             byte[] decodedMessage = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
@@ -95,7 +97,6 @@ public class Simetrico {
     private void fileWriter(String path, byte[] text) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
             fos.write(text);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,22 +114,29 @@ public class Simetrico {
     }
 
     public static void main(String[] args) {
-        final ResourceBundle bundle = ResourceBundle.getBundle("Cipher.emailCreedentials");
-        Simetrico sim = new Simetrico();
-        KeyGenerator cla = new KeyGenerator();
-        final String email = bundle.getString("EMAIL");
-        final String contra = bundle.getString("CONTRASEÑA");
-        cla.keyGenerator();
 
-        System.out.println("-----------");
-        String mensajeCifradoEmail = sim.cifrarTexto("Clave", email, "email");
-        System.out.println("Descifrado Email -> " + sim.descifrarTexto("Clave", "email"));
-        String mensajeCifradoContra = sim.cifrarTexto("Clave", contra, "contraseña");
-        System.out.println("Descifrado Contraseña -> " + sim.descifrarTexto("Clave", "contraseña"));
+        Simetrico sim = new Simetrico();
+
+        String rutaCarpeta = "C:\\Cifrado";
+
+        // Crear objeto File
+        File carpeta = new File(rutaCarpeta);
+
+        // Utilizar el método mkdir para crear la carpeta
+        if (carpeta.mkdir()) {
+            System.out.println("Carpeta creada exitosamente en C:");
+        } else {
+            System.err.println("Esa Carpeta ya existen");
+        }
+
+        String mensajeCifradoEmail = sim.cifrarTexto("clave", "2024g3_reto2@zohomail.eu", "email");
+        String mensajeCifradoContra = sim.cifrarTexto("clave", "G3_Tartanga", "contraseña");
 
         System.out.println("Cifrado Email -> " + mensajeCifradoEmail);
         System.out.println("Cifrado Contraseña -> " + mensajeCifradoContra);
         System.out.println("-----------");
-
+        System.out.println("Descifrado Email -> " + sim.descifrarTexto("clave", "email"));
+        System.out.println("Descifrado Contraseña -> " + sim.descifrarTexto("clave", "contraseña"));
+        System.out.println("-----------");
     }
 }
