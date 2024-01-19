@@ -1,7 +1,7 @@
 package Servicio;
 
 import Cipher.ContraMail;
-import Cipher.HashContra;
+import Chiper.HashContra;
 import Entidades.Cliente;
 import Excepciones.CreateException;
 import Excepciones.ReadException;

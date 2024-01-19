@@ -46,11 +46,13 @@ public class Simetrico {
             SecretKey derivedKeyPBK_AES = new SecretKeySpec(derivedKeyPBK, 0, derivedKeyPBK.length, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
             cipher.init(Cipher.ENCRYPT_MODE, derivedKeyPBK_AES);
 
             byte[] encodedMessage = cipher.doFinal(texto.getBytes());
             byte[] iv = cipher.getIV();
             byte[] combined = concatArrays(iv, encodedMessage);
+            fileWriter("c:\\Cifrado\\privateKeySimetric.der", iv);
             fileWriter("c:\\Cifrado\\credential.properties", combined);
             ret = Base64.getEncoder().encodeToString(encodedMessage);
         } catch (Exception e) {
@@ -61,8 +63,8 @@ public class Simetrico {
 
     public String descifrarTexto(String clave, String nombreArchivo) {
         String ret = null;
+        byte[] fileKey = fileReader("c:\\Cifrado\\privateKeySimetric.der");
         byte[] fileContent = fileReader("c:\\Cifrado\\credential.properties");
-        byte[] fileKey = fileReader("c:\\Cifrado\\privateKey.der");
 
         KeySpec keySpec = null;
         SecretKeyFactory secretKeyFactory = null;
@@ -129,8 +131,8 @@ public class Simetrico {
             System.err.println("Esa Carpeta ya existen");
         }
 
-        String mensajeCifradoEmail = sim.cifrarTexto("clave", "2024g3_reto2@zohomail.eu", "email");
-        String mensajeCifradoContra = sim.cifrarTexto("clave", "G3_Tartanga", "contraseña");
+        String mensajeCifradoEmail = sim.cifrarTexto("clave", "pruebacorreog1@zohomail.eu", "email");
+        String mensajeCifradoContra = sim.cifrarTexto("clave", "MiPatataSagrada123", "contraseña");
 
         System.out.println("Cifrado Email -> " + mensajeCifradoEmail);
         System.out.println("Cifrado Contraseña -> " + mensajeCifradoContra);
