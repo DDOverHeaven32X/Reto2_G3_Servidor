@@ -6,12 +6,13 @@
 package Servicio;
 
 import Entidades.Cliente;
+import Excepciones.CreateException;
+import Excepciones.ReadException;
 import Excepciones.UpdateException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -30,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  * @author 2dam
  */
 @Path("entidades.cliente")
-public class ClienteFacadeREST extends AbstractFacade<Cliente> {
+public class ClienteFacadeREST {
 
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
@@ -41,23 +42,37 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     private ClienteInterfaz clieEJB;
 
     public ClienteFacadeREST() {
-        super(Cliente.class);
+
     }
 
+    /**
+     * Método POST de crear un cliente nuevo
+     *
+     * @param cliente
+     */
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Cliente entity) {
-        super.create(entity);
+    public void create(Cliente cliente) {
+
+        try {
+            clieEJB.createEntrada(cliente);
+        } catch (CreateException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Cliente entity) {
-        super.edit(entity);
+        //super.edit(entity);
     }
 
+    /**
+     * Método PUT para modificar la contraseña del cliente
+     *
+     * @param cliente
+     */
     @PUT
     @Path("RecuperarContra")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -73,38 +88,58 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+        //super.remove(super.find(id));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Cliente find(@PathParam("id") Integer id) {
-        return super.find(id);
+        //return super.find(id);
+        return null;
     }
 
     @GET
-    @Override
+
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Cliente> findAll() {
-        return super.findAll();
+        LOGGER.info("Mostrando todas las clientes");
+        try {
+            return clieEJB.viewAllClientes();
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+
+    @GET
+    @Path("verClientesPorBanco/{n_tarjeta}/{pin}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Cliente> filtrarPorTarjeta(@PathParam("n_tarjeta") Long nTarjeta, @PathParam("pin") Integer pines) {
+
+        LOGGER.info("Mostrando clientes por credencial bancaria");
+        try {
+            return clieEJB.BankCredential(nTarjeta, pines);
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Cliente> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
+        //return super.findRange(new int[]{from, to});
+        return null;
     }
 
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
-        return String.valueOf(super.count());
+        //return String.valueOf(super.count());
+        return null;
     }
 
-    @Override
     protected EntityManager getEntityManager() {
         return em;
     }

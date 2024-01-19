@@ -3,12 +3,16 @@ package Servicio;
 import Cipher.ContraMail;
 import Cipher.HashContra;
 import Entidades.Cliente;
+import Excepciones.CreateException;
+import Excepciones.ReadException;
 import Excepciones.UpdateException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.InternalServerErrorException;
 
 /**
  *
@@ -32,11 +36,53 @@ public class ClienteEJB implements ClienteInterfaz {
             nuevaContra = email.sendMail(cliente.getLogin());
             nuevaContra = HashContra.hashContra(nuevaContra.getBytes());
             cliente.setLogin(nuevaContra);
-            abst.edit(cliente);
+            if (!em.contains(cliente)) {
+                em.merge(cliente);
+            }
+            em.flush();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
             throw new UpdateException(e.getMessage());
         }
+    }
+
+    /**
+     * Método para crear un cliente
+     *
+     * @param cliente
+     * @throws CreateException
+     */
+    @Override
+    public void createEntrada(Cliente cliente) throws CreateException {
+        try {
+            em.persist(cliente);
+        } catch (Exception e) {
+            throw new CreateException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Cliente> viewAllClientes() throws ReadException {
+        List<Cliente> cliente = null;
+        try {
+            cliente
+                    = em.createNamedQuery("verTodosLosClientes").getResultList();
+        } catch (Exception e) {
+            throw new ReadException(e.getMessage());
+        }
+        return cliente;
+    }
+
+    @Override
+    public List<Cliente> BankCredential(Long nTarjeta, Integer pines) throws ReadException {
+        List<Cliente> cliente = null;
+        try {
+            cliente
+                    = em.createNamedQuery("VerUsuarioPorCuentaBancaria").setParameter("n_tarjeta", nTarjeta).setParameter("pin", pines).getResultList();
+        } catch (Exception e) {
+            throw new ReadException(e.getMessage());
+        }
+        return cliente;
     }
 
 }
