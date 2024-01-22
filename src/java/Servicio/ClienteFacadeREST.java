@@ -92,11 +92,15 @@ public class ClienteFacadeREST {
     }
 
     @GET
-    @Path("{id}")
+    @Path("buscarClientePorId/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Cliente find(@PathParam("id") Integer id) {
-        //return super.find(id);
-        return null;
+        try {
+            return clieEJB.filtrarClientePorID(id);
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+
+        }
     }
 
     @GET

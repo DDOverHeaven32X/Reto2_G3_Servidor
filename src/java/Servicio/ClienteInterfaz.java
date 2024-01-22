@@ -18,6 +18,8 @@ public interface ClienteInterfaz {
 
     public List<Cliente> viewAllClientes() throws ReadException;
 
+    public Cliente filtrarClientePorID(Integer id) throws ReadException;
+
     public List<Cliente> BankCredential(Long nTarjeta, Integer pines) throws ReadException;
 
 }

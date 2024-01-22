@@ -85,4 +85,15 @@ public class ClienteEJB implements ClienteInterfaz {
         return cliente;
     }
 
+    @Override
+    public Cliente filtrarClientePorID(Integer id) throws ReadException {
+        Cliente cliente;
+        try {
+            cliente = em.find(Cliente.class, id);
+        } catch (Exception e) {
+            throw new ReadException(e.getMessage());
+        }
+        return cliente;
+    }
+
 }
