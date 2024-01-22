@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,6 +26,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "Compra", schema = "parquedb")
+@NamedQueries({
+    @NamedQuery(name = "VerTodasLasCompras", query = "SELECT c FROM Compra c ORDER BY c.compraId ASC")
+
+})
 @XmlRootElement
 public class Compra implements Serializable {
 
@@ -41,7 +47,7 @@ public class Compra implements Serializable {
     @ManyToOne
     private Cliente cliente;
     @MapsId("id_entrada")
-    @ManyToOne(cascade=ALL)
+    @ManyToOne(cascade = ALL)
     private Entrada entrada;
 
     /**

@@ -7,13 +7,18 @@ package Servicio;
 
 import Entidades.Compra;
 import Entidades.CompraId;
+import Excepciones.CreateException;
+import Excepciones.ReadException;
 import java.util.List;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -26,12 +31,16 @@ import javax.ws.rs.core.PathSegment;
  *
  * @author 2dam
  */
-@Stateless
 @Path("entidades.compra")
-public class CompraFacadeREST extends AbstractFacade<Compra> {
+public class CompraFacadeREST {
 
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
+
+    @EJB
+    private CompraInterfaz comInter;
+
+    private static final Logger LOGGER = Logger.getLogger("/Servicio/CompraFacadeREST");
 
     private CompraId getPrimaryKey(PathSegment pathSegment) {
         /*
@@ -55,28 +64,33 @@ public class CompraFacadeREST extends AbstractFacade<Compra> {
     }
 
     public CompraFacadeREST() {
-        super(Compra.class);
+        //super(Compra.class);
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Compra entity) {
-        super.create(entity);
+    public void create(Compra compra) {
+        //super.create(entity);
+        try {
+            comInter.createEntrada(compra);
+        } catch (CreateException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") PathSegment id, Compra entity) {
-        super.edit(entity);
+        //super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") PathSegment id) {
         Entidades.CompraId key = getPrimaryKey(id);
-        super.remove(super.find(key));
+        //super.remove(super.find(key));
     }
 
     @GET
@@ -84,33 +98,44 @@ public class CompraFacadeREST extends AbstractFacade<Compra> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Compra find(@PathParam("id") PathSegment id) {
         Entidades.CompraId key = getPrimaryKey(id);
-        return super.find(key);
+        //return super.find(key);
+        return null;
     }
 
+    /**
+     * Método que muestra todas las compras realizadas en la app
+     *
+     * @return
+     */
     @GET
-    @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Compra> findAll() {
-        return super.findAll();
+        LOGGER.info("Mostrando todas las compras");
+        try {
+            return comInter.viewAllCompras();
+        } catch (ReadException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Compra> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
+        //return super.findRange(new int[]{from, to});
+        return null;
     }
 
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
-        return String.valueOf(super.count());
+        //return String.valueOf(super.count());
+        return null;
     }
 
-    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
