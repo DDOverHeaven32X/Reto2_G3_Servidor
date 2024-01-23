@@ -33,24 +33,22 @@ public class CompraEJB implements CompraInterfaz {
     @Override
     public void createEntrada(Compra compra) throws CreateException {
         try {
-            Cliente cliente = em.find(Cliente.class, compra.getCliente().getId_user());
+            Cliente cliente = em.find(Cliente.class, compra.getCompraId().getId_user());
             if (cliente == null) {
                 cliente = em.merge(compra.getCliente());
             }
-            compra.setCliente(cliente);
-
-            Entrada entrada = em.find(Entrada.class, compra.getEntrada().getId_entrada());
+            Entrada entrada = em.find(Entrada.class, compra.getCompraId().getId_entrada());
             if (entrada == null) {
                 entrada = em.merge(compra.getEntrada());
             }
+            compra.setCliente(cliente);
             compra.setEntrada(entrada);
-
             em.persist(compra);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new CreateException(e.getMessage());
         }
     }
+
 
     @Override
     public List<Compra> viewAllCompras() throws ReadException {
