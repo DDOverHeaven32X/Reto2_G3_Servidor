@@ -33,12 +33,15 @@ public class Simetrico {
         return salt;
     }
 
-    public String cifrarTexto(String clave, String texto, String nombreArchivo) {
+    public String cifrarTexto(String clave, String email, String contrasena, String nombreArchivo) {
         String ret = null;
         KeySpec derivedKey = null;
         SecretKeyFactory secretKeyFactory = null;
 
         try {
+            // Combinar email y contraseña
+            String textoAEncriptar = email + " , " + contrasena;
+
             derivedKey = new PBEKeySpec(clave.toCharArray(), salt, 65536, 128);
             secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
@@ -49,12 +52,12 @@ public class Simetrico {
 
             cipher.init(Cipher.ENCRYPT_MODE, derivedKeyPBK_AES);
 
-            byte[] encodedMessage = cipher.doFinal(texto.getBytes());
+            byte[] encodedMessage = cipher.doFinal(textoAEncriptar.getBytes());
             byte[] iv = cipher.getIV();
             byte[] combined = concatArrays(iv, encodedMessage);
             fileWriter("c:\\Cifrado\\privateKeySimetric.der", iv);
             fileWriter("c:\\Cifrado\\credential.properties", combined);
-            ret = Base64.getEncoder().encodeToString(encodedMessage);
+            ret = new String(encodedMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,7 +85,12 @@ public class Simetrico {
             cipher.init(Cipher.DECRYPT_MODE, privateKey, ivParam);
             byte[] decodedMessage = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
 
-            ret = new String(decodedMessage);
+            // Separar email y contraseña después de descifrar
+            String[] partes = new String(decodedMessage).split(" , ");
+            String email = partes[0];
+            String contrasena = partes[1];
+
+            ret = "Email: " + email + ", Contraseña: " + contrasena;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,14 +139,10 @@ public class Simetrico {
             System.err.println("Esa Carpeta ya existen");
         }
 
-        String mensajeCifradoEmail = sim.cifrarTexto("clave", "pruebacorreog1@zohomail.eu", "email");
-        String mensajeCifradoContra = sim.cifrarTexto("clave", "MiPatataSagrada123", "contraseña");
+        String mensajeCifrado = sim.cifrarTexto("clave", "2024g3_reto2@zohomail.eu", "G3_Tartanga", "email");
+        System.out.println("Cifrado -> " + mensajeCifrado);
 
-        System.out.println("Cifrado Email -> " + mensajeCifradoEmail);
-        System.out.println("Cifrado Contraseña -> " + mensajeCifradoContra);
-        System.out.println("-----------");
-        System.out.println("Descifrado Email -> " + sim.descifrarTexto("clave", "email"));
-        System.out.println("Descifrado Contraseña -> " + sim.descifrarTexto("clave", "contraseña"));
-        System.out.println("-----------");
+        String mensajeDescifrado = sim.descifrarTexto("clave", "email");
+        System.out.println("Descifrado -> " + mensajeDescifrado);
     }
 }
