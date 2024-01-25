@@ -2,10 +2,12 @@ package Servicio;
 
 import Cipher.ContraMail;
 import Chiper.HashContra;
+import Cipher.Asimetricoservidor;
 import Entidades.Cliente;
 import Excepciones.CreateException;
 import Excepciones.ReadException;
 import Excepciones.UpdateException;
+import java.security.PrivateKey;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +36,7 @@ public class ClienteEJB implements ClienteInterfaz {
         ContraMail email = new ContraMail();
         try {
             nuevaContra = email.sendMail(cliente.getLogin());
-            nuevaContra = HashContra.hashContra(nuevaContra.getBytes());
+            nuevaContra = HashContra.hashContra(nuevaContra);
             cliente.setLogin(nuevaContra);
             if (!em.contains(cliente)) {
                 em.merge(cliente);
@@ -54,9 +56,19 @@ public class ClienteEJB implements ClienteInterfaz {
      */
     @Override
     public void createClient(Cliente cliente) throws CreateException {
+        String contra = null;
+        String hash = null;
+        String contra_desc = null;
+        PrivateKey privateKey;
+        Asimetricoservidor asi = new Asimetricoservidor();
         try {
-            em.persist(cliente);
 
+            contra = cliente.getContraseña();
+            privateKey = asi.loadPrivateKey();
+            contra_desc = asi.receiveAndDecryptMessage(contra.getBytes(), privateKey);
+            hash = HashContra.hashContra(contra);
+            cliente.setContraseña(hash);
+            em.persist(cliente);
         } catch (Exception e) {
             throw new CreateException(e.getMessage());
         }

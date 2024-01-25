@@ -13,12 +13,12 @@ import org.apache.xml.security.utils.Base64;
  *
  * @author Diego.
  */
-public class Asmimetricoservidor {
+public class Asimetricoservidor {
 
     //private static final String ENCRYPTED_DATA_PATH = "c:\\Cifrado\\UserCredentialC.properties";
     private static final String PRIVATE_KEY_PATH = "C:\\Cifrado\\privateKey.der";  // Ruta de la clave privada generada por GenerarClaves
 
-    private PrivateKey loadPrivateKey() {
+    public PrivateKey loadPrivateKey() {
         // Load Private Key from file
         try {
             byte[] keyBytes = Files.readAllBytes(Paths.get(PRIVATE_KEY_PATH));
@@ -31,18 +31,21 @@ public class Asmimetricoservidor {
         }
     }
 
-    private void receiveAndDecryptMessage(byte[] encryptedData, PrivateKey privateKey) {
+    public String receiveAndDecryptMessage(byte[] encryptedData, PrivateKey privateKey) {
+        String decryptedMessage = null;
+
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             byte[] decryptedData = cipher.doFinal(encryptedData);
 
-            String decryptedMessage = new String(decryptedData);
+            decryptedMessage = new String(decryptedData);
             System.out.println("Mensaje descifrado en el servidor: " + decryptedMessage);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return decryptedMessage;
     }
 
     private byte[] fileReader(String path) {
@@ -55,25 +58,25 @@ public class Asmimetricoservidor {
         return ret;
     }
 
-    public static void main(String[] args) {
-        Asmimetricoservidor asimetricS = new Asmimetricoservidor();
-
-        // Load Private Key
-        PrivateKey privateKey = asimetricS.loadPrivateKey(); // Asegúrate de tener la clave privada generada por GenerarClaves
-
-        if (privateKey != null) {
-            // Leer datos cifrados desde el cliente
-            if (args.length > 0) {
-
-                byte[] encryptedData = args[0].getBytes();
-
-                asimetricS.receiveAndDecryptMessage(encryptedData, privateKey);
-            } else {
-                System.out.println("Error: Falta el parámetro del mensaje cifrado");
-            }
-
-        } else {
-            System.out.println("Error: Clave privada no encontrada");
-        }
-    }
+//    public static void main(String[] args) {
+//        Asimetricoservidor asimetricS = new Asimetricoservidor();
+//
+//        // Load Private Key
+//        PrivateKey privateKey = asimetricS.loadPrivateKey(); // Asegúrate de tener la clave privada generada por GenerarClaves
+//
+//        if (privateKey != null) {
+//            // Leer datos cifrados desde el cliente
+//            if (args.length > 0) {
+//
+//                byte[] encryptedData = args[0].getBytes();
+//
+//                asimetricS.receiveAndDecryptMessage(encryptedData, privateKey);
+//            } else {
+//                System.out.println("Error: Falta el parámetro del mensaje cifrado");
+//            }
+//
+//        } else {
+//            System.out.println("Error: Clave privada no encontrada");
+//        }
+//    }
 }
