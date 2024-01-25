@@ -53,9 +53,10 @@ public class ClienteEJB implements ClienteInterfaz {
      * @throws CreateException
      */
     @Override
-    public void createEntrada(Cliente cliente) throws CreateException {
+    public void createClient(Cliente cliente) throws CreateException {
         try {
             em.persist(cliente);
+
         } catch (Exception e) {
             throw new CreateException(e.getMessage());
         }

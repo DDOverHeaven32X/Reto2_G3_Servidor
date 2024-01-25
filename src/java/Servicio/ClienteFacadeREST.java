@@ -55,7 +55,7 @@ public class ClienteFacadeREST {
     public void create(Cliente cliente) {
 
         try {
-            clieEJB.createEntrada(cliente);
+            clieEJB.createClient(cliente);
         } catch (CreateException e) {
             throw new InternalServerErrorException(e.getMessage());
         }
