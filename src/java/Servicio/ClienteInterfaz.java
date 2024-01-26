@@ -14,6 +14,8 @@ public interface ClienteInterfaz {
 
     public void recuperarContra(Cliente cliente) throws UpdateException;
 
+    public void cambiarContra(Cliente cliente) throws UpdateException;
+
     public void createClient(Cliente cliente) throws CreateException;
 
     public List<Cliente> viewAllClientes() throws ReadException;

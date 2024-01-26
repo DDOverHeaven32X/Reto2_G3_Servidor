@@ -27,9 +27,8 @@ import javax.ws.rs.core.MediaType;
  *
  * @author 2dam
  */
-
 @Path("entidades.usuario")
-public class UsuarioFacadeREST extends AbstractFacade<Usuario>{
+public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
@@ -45,7 +44,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario>{
 
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void createUsuario(Usuario usuario) {
-       super.create(usuario);
+        super.create(usuario);
     }
 
     @PUT
@@ -60,6 +59,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario>{
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
+
     @GET
     @Path("VerUsuariosPorLoginyContra/{login}/{contraseña}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -92,7 +92,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario>{
     public String countREST() {
         return String.valueOf(super.count());
     }
-   
+
     protected EntityManager getEntityManager() {
         return em;
     }

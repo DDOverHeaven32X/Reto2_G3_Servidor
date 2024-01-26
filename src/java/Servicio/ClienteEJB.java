@@ -121,6 +121,34 @@ public class ClienteEJB implements ClienteInterfaz {
         return cliente;
     }
 
+    @Override
+    public void cambiarContra(Cliente cliente) throws UpdateException {
+        String contra = null;
+        String hash = null;
+        String contra_desc = null;
+        try {
+            PrivateKey privateKey = loadPrivateKeyFromFile("C:\\Cifrado\\privateKey.der");
+
+            // Obtener la contraseña del cliente
+            contra = cliente.getContraseña();
+
+            // Descifrar la contraseña utilizando la clave privada
+            Asimetricoservidor asi = new Asimetricoservidor();
+            contra_desc = asi.receiveAndDecryptMessage(contra, privateKey);
+
+            // Aplicar el hash a la contraseña descifrada
+            hash = HashContra.hashContra(contra_desc);
+            cliente.setContraseña(hash);
+
+            if (!em.contains(cliente)) {
+                em.merge(cliente);
+            }
+            em.flush();
+        } catch (Exception e) {
+            throw new UpdateException(e.getMessage());
+        }
+    }
+
     // Método para cargar la clave privada desde un archivo
     private PrivateKey loadPrivateKeyFromFile(String filePath) {
         try {

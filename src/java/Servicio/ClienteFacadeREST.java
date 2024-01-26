@@ -74,11 +74,23 @@ public class ClienteFacadeREST {
      * @param cliente
      */
     @PUT
-    @Path("RecuperarContra")
+    @Path("recuperarContra")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void RecuperarContra(Cliente cliente) {
         try {
             clieEJB.recuperarContra(cliente);
+        } catch (UpdateException e) {
+            LOGGER.log(Level.SEVERE, null, e);
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+
+    @PUT
+    @Path("cambiarContra")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void cambiarContra(Cliente cliente) {
+        try {
+            clieEJB.cambiarContra(cliente);
         } catch (UpdateException e) {
             LOGGER.log(Level.SEVERE, null, e);
             throw new InternalServerErrorException(e.getMessage());
