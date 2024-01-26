@@ -7,7 +7,7 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import javax.crypto.Cipher;
-import org.apache.xml.security.utils.Base64;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -31,20 +31,26 @@ public class Asimetricoservidor {
         }
     }
 
-    public String receiveAndDecryptMessage(byte[] encryptedData, PrivateKey privateKey) {
+    public String receiveAndDecryptMessage(String encryptedHexData, PrivateKey privateKey) {
         String decryptedMessage = null;
 
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            // Convertir la cadena hexadecimal a un array de bytes
+            byte[] encryptedData = DatatypeConverter.parseHexBinary(encryptedHexData);
+
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
+
+            // Realizar la operación de descifrado
             byte[] decryptedData = cipher.doFinal(encryptedData);
 
             decryptedMessage = new String(decryptedData);
             System.out.println("Mensaje descifrado en el servidor: " + decryptedMessage);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
+
         return decryptedMessage;
     }
 
