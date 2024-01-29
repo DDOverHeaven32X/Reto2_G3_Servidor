@@ -19,4 +19,6 @@ public interface UsuarioInterfaz {
     public void createUsuario(Usuario usuario) throws CreateException;
 
     public List<Usuario> viewByLoginContraseña(String login, String contraseña) throws ReadException;
+
+    public List<Usuario> viewByLogin(String login) throws ReadException;
 }

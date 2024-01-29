@@ -33,7 +33,9 @@ public class ContraMail {
     String contraMail = null;
     Integer caracteresMinimos = 8;
     final String ZOHO_HOST = "smtp.zoho.eu";
-    final String TLS_PORT = "897";
+    final String TLS_PORT = "465";
+    //465
+
     final String SENDER_USERNAME = "2024g3_reto2@zohomail.eu";
     final String SENDER_PASSWORD = "G3_Tartanga";
     private static final Logger LOGGER = java.util.logging.Logger.getLogger("/Cipher/ContraMail");
@@ -51,9 +53,13 @@ public class ContraMail {
         props.setProperty("mail.smtps.host", ZOHO_HOST);
         props.setProperty("mail.smtp.port", TLS_PORT);
         props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.starttls.required", "true");
+        props.setProperty("mail.smtp.ssl.enable", "true");
+        props.setProperty("mail.smtp.ssl.checkserveridentity", "true");
         props.setProperty("mail.smtps.auth", "true");
-
         props.put("mail.smtps.quitwait", "false");
+        props.setProperty("mail.smtp.ssl.trust", "smtp.zoho.eu");
+        props.setProperty("mail.debug", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -76,14 +82,15 @@ public class ContraMail {
                     + "Saludos, 2Dam G3 CIFP Tartanga LHII");
             msg.setSentDate(new Date());
 
-            Transport transport = session.getTransport("smtps");
+            Transport transport = session.getTransport("smtp");
 
             transport.connect(ZOHO_HOST, SENDER_USERNAME, SENDER_PASSWORD);
             transport.sendMessage(msg, msg.getAllRecipients());
 
         } catch (MessagingException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException(e);
-
         }
 
         return nuevaContra;

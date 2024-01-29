@@ -73,4 +73,13 @@ public class UsuarioEJB implements UsuarioInterfaz {
         }
     }
 
+    @Override
+    public List<Usuario> viewByLogin(String login) throws ReadException {
+        try {
+            return em.createNamedQuery("VerUsuariosPorLogin").setParameter("login", login).getResultList();
+        } catch (Exception e) {
+            throw new ReadException(e.getMessage());
+        }
+    }
+
 }

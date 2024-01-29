@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "Usuario", schema = "parquedb")
 @NamedQueries({
     @NamedQuery(name = "VerUsuariosPorLoginyContra", query = "SELECT u FROM Usuario u WHERE u.login = :login AND u.contraseña = :contraseña")
+    ,
+    @NamedQuery(name = "VerUsuariosPorLogin", query = "SELECT u FROM Usuario u WHERE u.login = :login")
 })
 @DiscriminatorColumn(name = "privilegio", discriminatorType = DiscriminatorType.STRING)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

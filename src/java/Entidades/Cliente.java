@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "VerUsuarioPorCuentaBancaria", query = "SELECT c FROM Cliente c WHERE c.n_tarjeta = :n_tarjeta AND c.pin = :pin")
     ,
     @NamedQuery(name = "verTodosLosClientes", query = "SELECT c FROM Cliente c ORDER BY c.id_user ASC")
+
 })
 @XmlRootElement
 public class Cliente extends Usuario {

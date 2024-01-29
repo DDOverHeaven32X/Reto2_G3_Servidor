@@ -73,6 +73,18 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     @GET
+    @Path("VerUsuariosPorLogin/{login}/")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Usuario> findLogin(@PathParam("login") String login) {
+        try {
+            return usuarioInter.viewByLogin(login);
+        } catch (ReadException ex) {
+            System.out.println(ex.getMessage());
+            throw new InternalServerErrorException(ex.getMessage());
+        }
+    }
+
+    @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Usuario> findAll() {
