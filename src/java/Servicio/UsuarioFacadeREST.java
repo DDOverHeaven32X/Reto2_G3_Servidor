@@ -41,7 +41,6 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     @POST
-
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void createUsuario(Usuario usuario) {
         super.create(usuario);
@@ -67,7 +66,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         try {
             return usuarioInter.viewByLoginContraseña(login, contraseña);
         } catch (ReadException ex) {
-            System.out.println(ex.getMessage());
+
             throw new InternalServerErrorException(ex.getMessage());
         }
     }
@@ -79,7 +78,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         try {
             return usuarioInter.viewByLogin(login);
         } catch (ReadException ex) {
-            System.out.println(ex.getMessage());
+
             throw new InternalServerErrorException(ex.getMessage());
         }
     }

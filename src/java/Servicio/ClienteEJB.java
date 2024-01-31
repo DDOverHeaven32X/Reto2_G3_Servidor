@@ -39,8 +39,8 @@ public class ClienteEJB implements ClienteInterfaz {
         String nuevaContra = null;
         ContraMail email = new ContraMail();
         try {
+
             nuevaContra = email.sendMail(cliente.getLogin());
-            System.out.println(nuevaContra);
             nuevaContra = HashContra.hashContra(nuevaContra);
             cliente.setContraseña(nuevaContra);
             if (!em.contains(cliente)) {

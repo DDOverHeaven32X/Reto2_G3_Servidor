@@ -116,7 +116,6 @@ public class ClienteFacadeREST {
     }
 
     @GET
-
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Cliente> findAll() {
         LOGGER.info("Mostrando todas las clientes");
