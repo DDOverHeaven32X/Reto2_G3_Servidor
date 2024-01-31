@@ -98,16 +98,25 @@ public class ContraMail {
     }
 
     public String randomPasswordGenerator(Integer len) {
-        final String caracter = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789";
+        final String mayusculas = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+        final String minusculas = "abcdefghijklmnñopqrstuvwxyz";
+        final String numeros = "0123456789";
+        final String caracteres = mayusculas + minusculas + numeros;
 
         SecureRandom rng = new SecureRandom();
         StringBuilder sb = new StringBuilder();
-        int i;
 
-        for (i = 0; i < len; i++) {
-            int random = rng.nextInt(caracter.length());
-            sb.append(caracter.charAt(random));
+        // Al menos una mayúscula, una minúscula y un número
+        sb.append(mayusculas.charAt(rng.nextInt(mayusculas.length())));
+        sb.append(minusculas.charAt(rng.nextInt(minusculas.length())));
+        sb.append(numeros.charAt(rng.nextInt(numeros.length())));
+
+        // Resto de caracteres
+        for (int i = 3; i < len; i++) {
+            int random = rng.nextInt(caracteres.length());
+            sb.append(caracteres.charAt(random));
         }
+
         return sb.toString();
     }
 
