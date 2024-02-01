@@ -39,7 +39,7 @@ public class ClienteEJB implements ClienteInterfaz {
         String nuevaContra = null;
         ContraMail email = new ContraMail();
         try {
-
+            
             nuevaContra = email.sendMail(cliente.getLogin());
             nuevaContra = HashContra.hashContra(nuevaContra);
             cliente.setContraseña(nuevaContra);
@@ -64,16 +64,18 @@ public class ClienteEJB implements ClienteInterfaz {
         String contra = null;
         String hash = null;
         String contra_desc = null;
-
+        Asimetricoservidor asi = new Asimetricoservidor();
+        
         try {
+            PrivateKey privateKey;
             // Cargar la clave privada desde el archivo después de haberse generado
-            PrivateKey privateKey = loadPrivateKeyFromFile("C:\\Cifrado\\privateKey.der");
+            privateKey = asi.loadPrivateKey();
 
             // Obtener la contraseña del cliente
             contra = cliente.getContraseña();
 
             // Descifrar la contraseña utilizando la clave privada
-            Asimetricoservidor asi = new Asimetricoservidor();
+            
             contra_desc = asi.receiveAndDecryptMessage(contra, privateKey);
 
             // Aplicar el hash a la contraseña descifrada
@@ -127,14 +129,19 @@ public class ClienteEJB implements ClienteInterfaz {
         String contra = null;
         String hash = null;
         String contra_desc = null;
+        Asimetricoservidor asi = new Asimetricoservidor();
         try {
-            PrivateKey privateKey = loadPrivateKeyFromFile("C:\\Cifrado\\privateKey.der");
+
+            PrivateKey privateKey;
+
+            // Cargar la clave privada desde el archivo después de haberse generado
+            privateKey = asi.loadPrivateKey();
 
             // Obtener la contraseña del cliente
             contra = cliente.getContraseña();
 
             // Descifrar la contraseña utilizando la clave privada
-            Asimetricoservidor asi = new Asimetricoservidor();
+            
             contra_desc = asi.receiveAndDecryptMessage(contra, privateKey);
 
             // Aplicar el hash a la contraseña descifrada

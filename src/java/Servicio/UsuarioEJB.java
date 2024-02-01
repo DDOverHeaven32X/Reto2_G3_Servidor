@@ -44,11 +44,13 @@ public class UsuarioEJB implements UsuarioInterfaz {
         String contra = null;
         String contra_desc = null;
         String hash = null;
+        Asimetricoservidor asi = new Asimetricoservidor();
+        
+        
         try {
-            PrivateKey privateKey = loadPrivateKeyFromFile("C:\\Cifrado\\privateKey.der");
-
-            // Descifrar la contraseña utilizando la clave privada
-            Asimetricoservidor asi = new Asimetricoservidor();
+            PrivateKey privateKey;
+            // Cargar la clave privada desde el archivo después de haberse generado
+            privateKey = asi.loadPrivateKey();
             contra_desc = asi.receiveAndDecryptMessage(contraseña, privateKey);
 
             // Aplicar el hash a la contraseña descifrada

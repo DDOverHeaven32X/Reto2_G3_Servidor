@@ -55,8 +55,9 @@ public class Simetrico {
             byte[] encodedMessage = cipher.doFinal(textoAEncriptar.getBytes());
             byte[] iv = cipher.getIV();
             byte[] combined = concatArrays(iv, encodedMessage);
-            fileWriter("c:\\Cifrado\\privateKeySimetric.der", iv);
-            fileWriter("c:\\Cifrado\\credential.properties", combined);
+            
+            fileWriter(getClass().getResource("privateKeySimetric.der").getPath(), iv);
+            fileWriter(getClass().getResource("credential.properties").getPath(), combined);
             ret = new String(encodedMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,9 +67,9 @@ public class Simetrico {
 
     public String descifrarTexto(String clave, String nombreArchivo) {
         String ret = null;
-        byte[] fileKey = fileReader("c:\\Cifrado\\privateKeySimetric.der");
-        byte[] fileContent = fileReader("c:\\Cifrado\\credential.properties");
-
+        
+        byte[] fileKey = fileReader(getClass().getResource("privateKeySimetric.der").getPath());
+        byte[] fileContent = fileReader(getClass().getResource("credential.properties").getPath());
         KeySpec keySpec = null;
         SecretKeyFactory secretKeyFactory = null;
 
@@ -126,19 +127,7 @@ public class Simetrico {
     public static void main(String[] args) {
 
         Simetrico sim = new Simetrico();
-
-        String rutaCarpeta = "C:\\Cifrado";
-
-        // Crear objeto File
-        File carpeta = new File(rutaCarpeta);
-
-        // Utilizar el método mkdir para crear la carpeta
-        if (carpeta.mkdir()) {
-            System.out.println("Carpeta creada exitosamente en C:");
-        } else {
-            System.err.println("Esa Carpeta ya existen");
-        }
-
+        
         String mensajeCifrado = sim.cifrarTexto("clave", "2024g3_reto2@zohomail.eu", "G3_Tartanga", "email");
         System.out.println("Cifrado -> " + mensajeCifrado);
 

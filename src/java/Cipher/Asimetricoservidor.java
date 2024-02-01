@@ -1,5 +1,6 @@
 package Cipher;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,14 +17,20 @@ import javax.xml.bind.DatatypeConverter;
 public class Asimetricoservidor {
 
     //private static final String ENCRYPTED_DATA_PATH = "c:\\Cifrado\\UserCredentialC.properties";
-    private static final String PRIVATE_KEY_PATH = "C:\\Cifrado\\privateKey.der";  // Ruta de la clave privada generada por GenerarClaves
-
+    //esta es la linea original
+    private static final String PRIVATE_KEY_PATH = "src/cipher/privateKey.der";  
+    
     public PrivateKey loadPrivateKey() {
         // Load Private Key from file
         try {
-            byte[] keyBytes = Files.readAllBytes(Paths.get(PRIVATE_KEY_PATH));
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+            byte[] keyBytes = fileReader(getClass().getResource("privateKey.der").getPath());
+           // byte[] privateKeyBytes;
+           // FileInputStream fis = new FileInputStream(".//src//cipher//privateKey.der");
+            //privateKeyBytes = new byte[fis.available()];
+            //fis.read(privateKeyBytes);
+          
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
             return keyFactory.generatePrivate(spec);
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,35 +61,18 @@ public class Asimetricoservidor {
         return decryptedMessage;
     }
 
+    
+    
     private byte[] fileReader(String path) {
         byte[] ret = null;
+        File file = new File (path);
         try {
-            ret = Files.readAllBytes(Paths.get(path));
+           ret= Files.readAllBytes(file.toPath());
+          // InputStream in= getClass().getResourceAsStream("publicKey.der");
+           //ret = toByteArray(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return ret;
     }
-
-//    public static void main(String[] args) {
-//        Asimetricoservidor asimetricS = new Asimetricoservidor();
-//
-//        // Load Private Key
-//        PrivateKey privateKey = asimetricS.loadPrivateKey(); // Asegúrate de tener la clave privada generada por GenerarClaves
-//
-//        if (privateKey != null) {
-//            // Leer datos cifrados desde el cliente
-//            if (args.length > 0) {
-//
-//                byte[] encryptedData = args[0].getBytes();
-//
-//                asimetricS.receiveAndDecryptMessage(encryptedData, privateKey);
-//            } else {
-//                System.out.println("Error: Falta el parámetro del mensaje cifrado");
-//            }
-//
-//        } else {
-//            System.out.println("Error: Clave privada no encontrada");
-//        }
-//    }
 }
