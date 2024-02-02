@@ -21,8 +21,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Fachada REST del adminisrador
  *
- * @author 2dam
+ * @author Diego, Ander, Adrian
  */
 @Stateless
 @Path("entidades.admin")
@@ -87,5 +88,5 @@ public class AdminFacadeREST extends AbstractFacade<Admin> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

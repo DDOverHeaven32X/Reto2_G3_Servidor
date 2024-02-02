@@ -11,24 +11,28 @@ import javax.crypto.Cipher;
 import javax.xml.bind.DatatypeConverter;
 
 /**
+ * Se encarga de descrifrar la contraseña del cliente
  *
  * @author Diego.
  */
 public class Asimetricoservidor {
 
-    //private static final String ENCRYPTED_DATA_PATH = "c:\\Cifrado\\UserCredentialC.properties";
-    //esta es la linea original
-    private static final String PRIVATE_KEY_PATH = "src/cipher/privateKey.der";  
-    
+    private static final String PRIVATE_KEY_PATH = "src/cipher/privateKey.der";
+
+    /**
+     * Método carga la clave privada generada
+     *
+     * @return una llave privada
+     */
     public PrivateKey loadPrivateKey() {
         // Load Private Key from file
         try {
             byte[] keyBytes = fileReader(getClass().getResource("privateKey.der").getPath());
-           // byte[] privateKeyBytes;
-           // FileInputStream fis = new FileInputStream(".//src//cipher//privateKey.der");
+            // byte[] privateKeyBytes;
+            // FileInputStream fis = new FileInputStream(".//src//cipher//privateKey.der");
             //privateKeyBytes = new byte[fis.available()];
             //fis.read(privateKeyBytes);
-          
+
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
             return keyFactory.generatePrivate(spec);
@@ -38,6 +42,14 @@ public class Asimetricoservidor {
         }
     }
 
+    /**
+     * Método que recive los datos cifrados de forma hexadecimal y los descifra
+     * usando la clave privada
+     *
+     * @param encryptedHexData mensaje cifrado
+     * @param privateKey llave privada
+     * @return mensjae descifrado
+     */
     public String receiveAndDecryptMessage(String encryptedHexData, PrivateKey privateKey) {
         String decryptedMessage = null;
 
@@ -61,15 +73,19 @@ public class Asimetricoservidor {
         return decryptedMessage;
     }
 
-    
-    
+    /**
+     * Método que lee la clave privada del servidor
+     *
+     * @param path
+     * @return
+     */
     private byte[] fileReader(String path) {
         byte[] ret = null;
-        File file = new File (path);
+        File file = new File(path);
         try {
-           ret= Files.readAllBytes(file.toPath());
-          // InputStream in= getClass().getResourceAsStream("publicKey.der");
-           //ret = toByteArray(in);
+            ret = Files.readAllBytes(file.toPath());
+            // InputStream in= getClass().getResourceAsStream("publicKey.der");
+            //ret = toByteArray(in);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -21,10 +21,21 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Clase que se encarga de cifrar la calve, el correo y la contraseña del correo
+ * zoho para el envio del correo
+ *
+ * @author Diego, Adrian
+ */
 public class Simetrico {
 
     private static final byte[] salt = generateSalt();
 
+    /**
+     * Método que genera una salt aleatoria
+     *
+     * @return
+     */
     private static byte[] generateSalt() {
         // Genera la sal de manera segura
         SecureRandom random = new SecureRandom();
@@ -33,6 +44,15 @@ public class Simetrico {
         return salt;
     }
 
+    /**
+     * Método que cifra todos los campos usando el algoritmo AES
+     *
+     * @param clave clave salt
+     * @param email correo
+     * @param contrasena contraseña
+     * @param nombreArchivo nombre del archivo
+     * @return mensaje cifrado
+     */
     public String cifrarTexto(String clave, String email, String contrasena, String nombreArchivo) {
         String ret = null;
         KeySpec derivedKey = null;
@@ -55,7 +75,7 @@ public class Simetrico {
             byte[] encodedMessage = cipher.doFinal(textoAEncriptar.getBytes());
             byte[] iv = cipher.getIV();
             byte[] combined = concatArrays(iv, encodedMessage);
-            
+
             fileWriter(getClass().getResource("privateKeySimetric.der").getPath(), iv);
             fileWriter(getClass().getResource("credential.properties").getPath(), combined);
             ret = new String(encodedMessage);
@@ -65,9 +85,16 @@ public class Simetrico {
         return ret;
     }
 
+    /**
+     * Método que descifra los parametros del correo usando la clave
+     *
+     * @param clave clave salt
+     * @param nombreArchivo nombre del archivo
+     * @return mensaje descifrado
+     */
     public String descifrarTexto(String clave, String nombreArchivo) {
         String ret = null;
-        
+
         byte[] fileKey = fileReader(getClass().getResource("privateKeySimetric.der").getPath());
         byte[] fileContent = fileReader(getClass().getResource("credential.properties").getPath());
         KeySpec keySpec = null;
@@ -98,6 +125,13 @@ public class Simetrico {
         return ret;
     }
 
+    /**
+     * Método que lee el array de datos cifrados
+     *
+     * @param array1
+     * @param array2
+     * @return
+     */
     private byte[] concatArrays(byte[] array1, byte[] array2) {
         byte[] ret = new byte[array1.length + array2.length];
         System.arraycopy(array1, 0, ret, 0, array1.length);
@@ -105,6 +139,12 @@ public class Simetrico {
         return ret;
     }
 
+    /**
+     * Método que permite la creacion de la clave privada simetrica
+     *
+     * @param path
+     * @param text
+     */
     private void fileWriter(String path, byte[] text) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
             fos.write(text);
@@ -113,6 +153,12 @@ public class Simetrico {
         }
     }
 
+    /**
+     * Método que lee la clave privada simetrica
+     *
+     * @param path
+     * @return
+     */
     private byte[] fileReader(String path) {
         byte ret[] = null;
         File file = new File(path);
@@ -124,10 +170,15 @@ public class Simetrico {
         return ret;
     }
 
+    /**
+     * Método main que comienza el cifrado asimetrico del servidor
+     *
+     * @param args main
+     */
     public static void main(String[] args) {
 
         Simetrico sim = new Simetrico();
-        
+
         String mensajeCifrado = sim.cifrarTexto("clave", "2024g3_reto2@zohomail.eu", "G3_Tartanga", "email");
         System.out.println("Cifrado -> " + mensajeCifrado);
 

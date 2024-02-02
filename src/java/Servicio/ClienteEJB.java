@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.InternalServerErrorException;
 
 /**
+ * Clase EJB del cliente
  *
  * @author Diego, Adrian.
  */
@@ -34,12 +35,19 @@ public class ClienteEJB implements ClienteInterfaz {
 
     private AbstractFacade abst;
 
+    /**
+     * Método que se encarga de la recuperación de la contraseña y el envio de
+     * correo
+     *
+     * @param cliente devuelve un cliente
+     * @throws UpdateException devuelve un error
+     */
     @Override
     public void recuperarContra(Cliente cliente) throws UpdateException {
         String nuevaContra = null;
         ContraMail email = new ContraMail();
         try {
-            
+
             nuevaContra = email.sendMail(cliente.getLogin());
             nuevaContra = HashContra.hashContra(nuevaContra);
             cliente.setContraseña(nuevaContra);
@@ -54,10 +62,11 @@ public class ClienteEJB implements ClienteInterfaz {
     }
 
     /**
-     * Método para crear un cliente
+     * Método para crear un cliente, cifra la contraseña dada y la hasea, luego
+     * crea el cliente nuevo
      *
-     * @param cliente
-     * @throws CreateException
+     * @param cliente devuelve un cliente
+     * @throws CreateException devuelve un error
      */
     @Override
     public void createClient(Cliente cliente) throws CreateException {
@@ -65,7 +74,7 @@ public class ClienteEJB implements ClienteInterfaz {
         String hash = null;
         String contra_desc = null;
         Asimetricoservidor asi = new Asimetricoservidor();
-        
+
         try {
             PrivateKey privateKey;
             // Cargar la clave privada desde el archivo después de haberse generado
@@ -75,7 +84,6 @@ public class ClienteEJB implements ClienteInterfaz {
             contra = cliente.getContraseña();
 
             // Descifrar la contraseña utilizando la clave privada
-            
             contra_desc = asi.receiveAndDecryptMessage(contra, privateKey);
 
             // Aplicar el hash a la contraseña descifrada
@@ -89,6 +97,12 @@ public class ClienteEJB implements ClienteInterfaz {
         }
     }
 
+    /**
+     * Método que muestra todos los clientes
+     *
+     * @return cliente
+     * @throws ReadException devuelve un error
+     */
     @Override
     public List<Cliente> viewAllClientes() throws ReadException {
         List<Cliente> cliente = null;
@@ -101,6 +115,15 @@ public class ClienteEJB implements ClienteInterfaz {
         return cliente;
     }
 
+    /**
+     * Método que muestra a los clientes que tengan el nTarjeta y Pin
+     * introducidos
+     *
+     * @param nTarjeta tareja del cliente
+     * @param pines pin de seguridad del cliente
+     * @return cliente
+     * @throws ReadException devuelve un error
+     */
     @Override
     public List<Cliente> BankCredential(Long nTarjeta, Integer pines) throws ReadException {
         List<Cliente> cliente = null;
@@ -113,6 +136,13 @@ public class ClienteEJB implements ClienteInterfaz {
         return cliente;
     }
 
+    /**
+     * Método que filtra un cliente por Id
+     *
+     * @param id id del cliente
+     * @return cliente
+     * @throws ReadException devuelve un error
+     */
     @Override
     public Cliente filtrarClientePorID(Integer id) throws ReadException {
         Cliente cliente;
@@ -124,6 +154,13 @@ public class ClienteEJB implements ClienteInterfaz {
         return cliente;
     }
 
+    /**
+     * Método que permite el cambio de contraseña, la cifra, hasea y la
+     * reestablece en la base de datos
+     *
+     * @param cliente devuelve un cliente
+     * @throws UpdateException devuelve un error
+     */
     @Override
     public void cambiarContra(Cliente cliente) throws UpdateException {
         String contra = null;
@@ -141,7 +178,6 @@ public class ClienteEJB implements ClienteInterfaz {
             contra = cliente.getContraseña();
 
             // Descifrar la contraseña utilizando la clave privada
-            
             contra_desc = asi.receiveAndDecryptMessage(contra, privateKey);
 
             // Aplicar el hash a la contraseña descifrada
@@ -157,7 +193,12 @@ public class ClienteEJB implements ClienteInterfaz {
         }
     }
 
-    // Método para cargar la clave privada desde un archivo
+    /**
+     * Método que carga la clave privada desde una archivo
+     *
+     * @param filePath ruta de la clave
+     * @return
+     */
     private PrivateKey loadPrivateKeyFromFile(String filePath) {
         try {
             byte[] keyBytes = Files.readAllBytes(Paths.get(filePath));

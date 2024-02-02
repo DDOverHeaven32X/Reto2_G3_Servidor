@@ -22,7 +22,7 @@ public interface ZonaInterfaz {
      * Crea una nueva zona a partir de datos en formato XML o JSON.
      *
      * @param zona Objeto de la zona que se va a crear.
-     * @throws CreateException
+     * @throws CreateException un error
      */
     public void createZona(Zona zona) throws CreateException;
 
@@ -31,7 +31,7 @@ public interface ZonaInterfaz {
      *
      * @param idZona Identificador de la zona que se quiere mostrar.
      * @return Zona cuyo identificador sea el introducido.
-     * @throws ReadException
+     * @throws ReadException un error
      */
     public Zona viewById(Integer idZona) throws ReadException;
 
@@ -39,7 +39,7 @@ public interface ZonaInterfaz {
      * Visualiza todas las zonas disponibles.
      *
      * @return Lista de todas las zonas existentes.
-     * @throws ReadException
+     * @throws ReadException un error
      */
     public List<Zona> viewAllZonas() throws ReadException;
 
@@ -48,7 +48,7 @@ public interface ZonaInterfaz {
      *
      * @param nombreZona Nombre de la zona que se desea buscar.
      * @return Lista de zonas con el nombre especificado.
-     * @throws ReadException
+     * @throws ReadException un error
      */
     public List<Zona> viewByNombre(String nombreZona) throws ReadException;
 
@@ -57,7 +57,7 @@ public interface ZonaInterfaz {
      *
      * @param tipoAnimal Tipo de animal de las zonas que se buscan.
      * @return Lista de zonas del tipo de animal especificado.
-     * @throws ReadException
+     * @throws ReadException un error
      */
     public List<Zona> viewByTipo(String tipoAnimal) throws ReadException;
 
@@ -66,7 +66,7 @@ public interface ZonaInterfaz {
      *
      * @param entrada Entrada de la zona que se desea buscar.
      * @return La zona asociada a la entrada proporcionada.
-     * @throws ReadException
+     * @throws ReadException un error
      */
     public Zona viewZonaByEntrada(String entrada) throws ReadException;
 
@@ -74,7 +74,7 @@ public interface ZonaInterfaz {
      * Actualiza la información de una zona existente.
      *
      * @param zona Zona con la información actualizada.
-     * @throws UpdateException
+     * @throws UpdateException un error
      */
     public void updateZona(Zona zona) throws UpdateException;
 
@@ -82,7 +82,7 @@ public interface ZonaInterfaz {
      * Elimina una zona existente.
      *
      * @param zona Zona que se desea eliminar.
-     * @throws DeleteException
+     * @throws DeleteException un error
      */
     public void deleteZona(Zona zona) throws DeleteException;
 }

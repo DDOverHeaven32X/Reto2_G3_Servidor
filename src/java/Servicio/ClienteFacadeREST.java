@@ -27,8 +27,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Fachada REST del cliente
  *
- * @author 2dam
+ * @author Diego, Ander, Adrian
  */
 @Path("entidades.cliente")
 public class ClienteFacadeREST {
@@ -48,7 +49,7 @@ public class ClienteFacadeREST {
     /**
      * Método POST de crear un cliente nuevo
      *
-     * @param cliente
+     * @param cliente un cliente
      */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -71,7 +72,7 @@ public class ClienteFacadeREST {
     /**
      * Método PUT para modificar la contraseña del cliente
      *
-     * @param cliente
+     * @param cliente un cliente
      */
     @PUT
     @Path("recuperarContra")
@@ -85,6 +86,11 @@ public class ClienteFacadeREST {
         }
     }
 
+    /**
+     * Método PUT encargado del cambio de contraseña
+     *
+     * @param cliente un cliente
+     */
     @PUT
     @Path("cambiarContra")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -103,6 +109,12 @@ public class ClienteFacadeREST {
         //super.remove(super.find(id));
     }
 
+    /**
+     * Método GET que busca un cliente por ID
+     *
+     * @param id id del cliente
+     * @return un cliente
+     */
     @GET
     @Path("buscarClientePorId/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -115,6 +127,11 @@ public class ClienteFacadeREST {
         }
     }
 
+    /**
+     * Método GET que muestra todos los clientes
+     *
+     * @return un cliente
+     */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Cliente> findAll() {
@@ -126,6 +143,13 @@ public class ClienteFacadeREST {
         }
     }
 
+    /**
+     * Método GET que muestra los clientes con tarjeta y pin especificos
+     *
+     * @param nTarjeta tarjeta del cliente
+     * @param pines pin de seguridad del cliente
+     * @return una lista de clientes
+     */
     @GET
     @Path("verClientesPorBanco/{n_tarjeta}/{pin}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -155,6 +179,11 @@ public class ClienteFacadeREST {
         return null;
     }
 
+    /**
+     * Instancia entity manager
+     *
+     * @return em
+     */
     protected EntityManager getEntityManager() {
         return em;
     }

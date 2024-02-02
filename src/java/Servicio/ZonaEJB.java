@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
+ * EJB de Zona
  *
  * @author Ander
  */

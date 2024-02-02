@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
+ * EJB de la clase compra
  *
  * @author Diego.
  */
@@ -27,8 +28,8 @@ public class CompraEJB implements CompraInterfaz {
      * Método que crea una nueva compra, añade el cliente y la entrada en el
      * entorno de persistencia para realizar la insercion
      *
-     * @param compra
-     * @throws CreateException
+     * @param compra una compra
+     * @throws CreateException lanza una excepcion
      */
     @Override
     public void createEntrada(Compra compra) throws CreateException {
@@ -49,7 +50,12 @@ public class CompraEJB implements CompraInterfaz {
         }
     }
 
-
+    /**
+     * Método que muestra todas las compras
+     *
+     * @return una lista de compras
+     * @throws ReadException lanza un error
+     */
     @Override
     public List<Compra> viewAllCompras() throws ReadException {
         List<Compra> compra = null;

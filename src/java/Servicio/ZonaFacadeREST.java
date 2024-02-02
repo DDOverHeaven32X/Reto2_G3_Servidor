@@ -28,8 +28,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Fachada REST de Zona
  *
- * @author 2dam
+ * @author Ander
  */
 @Path("entidades.zona")
 public class ZonaFacadeREST {
@@ -185,8 +186,8 @@ public class ZonaFacadeREST {
 
     }
 
-    /*  
-    
+    /*
+
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -208,5 +209,5 @@ public class ZonaFacadeREST {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

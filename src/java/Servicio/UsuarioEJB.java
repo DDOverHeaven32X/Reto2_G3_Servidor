@@ -22,8 +22,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
+ * EJB del usuario
  *
- * @author 2dam
+ * @author Diego, Ander, Adrian
  */
 @Stateless
 public class UsuarioEJB implements UsuarioInterfaz {
@@ -31,6 +32,12 @@ public class UsuarioEJB implements UsuarioInterfaz {
     @PersistenceContext(unitName = "Reto2_G3_ServidorPU")
     private EntityManager em;
 
+    /**
+     * Método que crea un usuario
+     *
+     * @param usuario un usaurio
+     * @throws CreateException una excepcion
+     */
     @Override
     public void createUsuario(Usuario usuario) throws CreateException {
         if (usuario.getId_user() == null) {
@@ -39,14 +46,22 @@ public class UsuarioEJB implements UsuarioInterfaz {
         em.persist(usuario);
     }
 
+    /**
+     * Método que muestra los usuarios por el correo y contraseña, cifra la
+     * contraseña para hacer al compracion
+     *
+     * @param login un correo
+     * @param contraseña una contraseña
+     * @return lista de usuarios
+     * @throws ReadException un error
+     */
     @Override
     public List<Usuario> viewByLoginContraseña(String login, String contraseña) throws ReadException {
         String contra = null;
         String contra_desc = null;
         String hash = null;
         Asimetricoservidor asi = new Asimetricoservidor();
-        
-        
+
         try {
             PrivateKey privateKey;
             // Cargar la clave privada desde el archivo después de haberse generado
@@ -62,7 +77,12 @@ public class UsuarioEJB implements UsuarioInterfaz {
         }
     }
 
-    // Método para cargar la clave privada desde un archivo
+    /**
+     * Método que lee la clave privada
+     *
+     * @param filePath
+     * @return
+     */
     private PrivateKey loadPrivateKeyFromFile(String filePath) {
         try {
             byte[] keyBytes = Files.readAllBytes(Paths.get(filePath));
@@ -75,6 +95,13 @@ public class UsuarioEJB implements UsuarioInterfaz {
         }
     }
 
+    /**
+     * Método que ve usuarios por correo
+     *
+     * @param login un login
+     * @return una lista
+     * @throws ReadException un error
+     */
     @Override
     public List<Usuario> viewByLogin(String login) throws ReadException {
         try {

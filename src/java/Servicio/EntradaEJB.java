@@ -29,9 +29,8 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para crear una entrada
      *
-     * @param entrada, instancia del objeto Entrada
-     * @throws CreateException, Excepcion que salta si ocurre un error a la hora
-     * de crear una entrada
+     * @param entrada una entrada
+     * @throws CreateException un error
      */
     @Override
     public void createEntrada(Entrada entrada) throws CreateException {
@@ -45,9 +44,8 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para modificar una entrada
      *
-     * @param entrada, instancia del objeto Entrada
-     * @throws UpdateException, Excepcion que salta si ocurre un error a la hora
-     * de modificar una entrada
+     * @param entrada una entrada
+     * @throws UpdateException un error
      */
     @Override
     public void modifyEntrada(Entrada entrada) throws UpdateException {
@@ -64,9 +62,8 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para borrar una entrada
      *
-     * @param entrada, instancia del objeto Entrada
-     * @throws DeleteException, Excepcion que salta si ocurre un error a la hora
-     * de borrar una entrada
+     * @param entrada uan entrada
+     * @throws DeleteException un error
      */
     @Override
     public void deleteEntrada(Entrada entrada) throws DeleteException {
@@ -80,8 +77,7 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para poder ver todas las entradas
      *
-     * @throws ReadException, Excepcion que salta si ocurre un error de lectura
-     * de la entidad
+     * @throws ReadException una excepcion
      */
     @Override
     public List<Entrada> viewAllEntradas() throws ReadException {
@@ -98,9 +94,8 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para poder ver las entradas que tengan una fecha en concreto
      *
-     * @param fecha, buscar una fecha especifica por el cliente
-     * @throws ReadException, Excepcion que salta si ocurre un error de lectura
-     * de la entidad
+     * @param fecha una fecha
+     * @throws ReadException un error
      */
     @Override
     public List<Entrada> viewEntradaByDate(Date fecha) throws ReadException {
@@ -118,9 +113,8 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para poder ver las entradas por el precio
      *
-     * @param valor, buscar un valor monetario especifico por el cliente
-     * @throws ReadException, Excepcion que salta si ocurre un error de lectura
-     * de la entidad
+     * @param valor un valor
+     * @throws ReadException una excpecion
      */
     @Override
     public List<Entrada> viewEntradaByPrice(Float valor) throws ReadException {
@@ -139,12 +133,9 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para poder ver las entradas del cliente
      *
-     * @param login, busca una entrada de un cliente mediante su correo
-     * electronico
-     * @return entrada, devuelve una coleccion de entradas asociadas al cliente
-     * especifico
-     * @throws ReadException, Excepcion que salta si ocurre un error de lectura
-     * de la entidad
+     * @param login el correo
+     * @return entrada una entrada
+     * @throws ReadException un error
      */
     @Override
     public List<Entrada> viewEntradaDeCliente(String login) throws ReadException {
@@ -161,10 +152,8 @@ public class EntradaEJB implements EntradaIntefraz {
     /**
      * Método EJB para filtrar una entrada por su identificador (ID)
      *
-     * @param id, busca una entrada por un valor numerico que se asocia al ID de
-     * la entidad entrada
-     * @throws ReadException, Excepcion que salta si ocurre un error de lectura
-     * de la entidad
+     * @param id un id del cliente
+     * @throws ReadException un error
      */
     @Override
     public Entrada filtrarEntradaPorID(Integer id) throws ReadException {

@@ -22,6 +22,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
+ * Clase que recive los parámetros cifrados de forma Simetrica del correo de
+ * zoho, crea una contraseña aleatoria ajustada a nuestro patrón y finalmente,
+ * envia el correo al usaurio que lo solicite
  *
  * @author Diego, Adrían.
  */
@@ -34,12 +37,18 @@ public class ContraMail {
     Integer caracteresMinimos = 8;
     final String ZOHO_HOST = "smtp.zoho.eu";
     final String TLS_PORT = "465";
-    //465
 
     final String SENDER_USERNAME = "2024g3_reto2@zohomail.eu";
     final String SENDER_PASSWORD = "G3_Tartanga";
     private static final Logger LOGGER = java.util.logging.Logger.getLogger("/Cipher/ContraMail");
 
+    /**
+     * Método que recive las credenciales descifradas,y envia un correo con las
+     * claves generadas de forma aleatoria
+     *
+     * @param mailUser correo del usuario
+     * @return nueva contraseña
+     */
     public String sendMail(String mailUser) {
         Simetrico simi = new Simetrico();
 
@@ -97,6 +106,12 @@ public class ContraMail {
 
     }
 
+    /**
+     * Método que genera la contraseña de forma aleatoria
+     *
+     * @param len numero de digitos
+     * @return la nueva contraseña
+     */
     public String randomPasswordGenerator(Integer len) {
         final String mayusculas = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
         final String minusculas = "abcdefghijklmnñopqrstuvwxyz";
@@ -120,6 +135,12 @@ public class ContraMail {
         return sb.toString();
     }
 
+    /**
+     * Método que lee ficheros
+     *
+     * @param path
+     * @return
+     */
     private static byte[] fileReader(String path) {
         byte ret[] = null;
         File file = new File(path);

@@ -24,8 +24,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Fachada REST del usaurio
  *
- * @author 2dam
+ * @author Diego, Ander y Adrian
  */
 @Path("entidades.usuario")
 public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
@@ -40,6 +41,11 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         super(Usuario.class);
     }
 
+    /**
+     * Método POST que creea un usaurio
+     *
+     * @param usuario un usuario
+     */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void createUsuario(Usuario usuario) {
@@ -59,6 +65,13 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         super.remove(super.find(id));
     }
 
+    /**
+     * Método GET que muestra usaurios por un correo y contraseña especificos
+     *
+     * @param login un correo
+     * @param contraseña una contraseña
+     * @return una lista
+     */
     @GET
     @Path("VerUsuariosPorLoginyContra/{login}/{contraseña}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -71,6 +84,12 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         }
     }
 
+    /**
+     * Método que muestra usaurios por correo especifico
+     *
+     * @param login un correo
+     * @return una lista de usuarios
+     */
     @GET
     @Path("VerUsuariosPorLogin/{login}/")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -83,6 +102,11 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         }
     }
 
+    /**
+     * Método que muestra todos los usuarios
+     *
+     * @return una lista
+     */
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

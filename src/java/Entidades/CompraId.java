@@ -24,47 +24,22 @@ public class CompraId implements Serializable {
     private Integer id_user;
     private Integer id_entrada;
 
-    /**
-     * Getter de Id_user
-     *
-     * @return id_user
-     */
     public Integer getId_user() {
         return id_user;
     }
 
-    /**
-     * Setter de Id_user
-     *
-     * @param id_user
-     */
     public void setId_user(Integer id_user) {
         this.id_user = id_user;
     }
 
-    /**
-     * Getter de Id_entrada
-     *
-     * @return id_entrada
-     */
     public Integer getId_entrada() {
         return id_entrada;
     }
 
-    /**
-     * Setter de Id_entrada
-     *
-     * @param id_entrada
-     */
     public void setId_entrada(Integer id_entrada) {
         this.id_entrada = id_entrada;
     }
 
-    /**
-     * Método autogenerado de hashcode
-     *
-     * @return hash
-     */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -73,12 +48,6 @@ public class CompraId implements Serializable {
         return hash;
     }
 
-    /**
-     * Método autogenerado de equals
-     *
-     * @param obj
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -100,11 +69,6 @@ public class CompraId implements Serializable {
         return true;
     }
 
-    /**
-     * Método autogenerado de toString
-     *
-     * @return CompraID
-     */
     @Override
     public String toString() {
         return "CompraID{" + "n_tarjeta=" + id_user + ", id_entrada=" + id_entrada + '}';

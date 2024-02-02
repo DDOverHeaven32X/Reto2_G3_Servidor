@@ -28,8 +28,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 
 /**
+ * Fachada REST de compra
  *
- * @author 2dam
+ * @author Diego
  */
 @Path("entidades.compra")
 public class CompraFacadeREST {
@@ -67,6 +68,11 @@ public class CompraFacadeREST {
         //super(Compra.class);
     }
 
+    /**
+     * Método que permite crear una compra
+     *
+     * @param compra una compra
+     */
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Compra compra) {
@@ -105,7 +111,7 @@ public class CompraFacadeREST {
     /**
      * Método que muestra todas las compras realizadas en la app
      *
-     * @return
+     * @return una lista
      */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

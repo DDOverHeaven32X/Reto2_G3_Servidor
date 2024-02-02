@@ -1,6 +1,7 @@
 package Excepciones;
 
 /**
+ * Excepcion que se encarga de controlar errores a la hora de leer datos
  *
  * @author Adrian, Diego, Ander
  */

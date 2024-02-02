@@ -17,40 +17,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class EspeciesDTO {
 
-    /**
-     * Declaramos la lista de strings para guardar las especies
-     */
     private List<String> especies;
 
-    /**
-     * constructor
-     *
-     * @param especies
-     */
     public EspeciesDTO(List<String> especies) {
         this.especies = especies;
     }
 
-    /**
-     * constructor vacio
-     */
     public EspeciesDTO() {
     }
 
-    /**
-     * Getter de especies
-     *
-     * @return especies
-     */
     public List<String> getEspecies() {
         return especies;
     }
 
-    /**
-     * Setter de especies
-     *
-     * @param especies
-     */
     public void setEspecies(List<String> especies) {
         this.especies = especies;
     }

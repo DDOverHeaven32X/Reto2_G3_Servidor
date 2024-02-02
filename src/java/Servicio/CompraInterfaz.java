@@ -15,16 +15,16 @@ public interface CompraInterfaz {
     /**
      * Método para comprar una nueva entrada
      *
-     * @param compra
-     * @throws CreateException
+     * @param compra una compra
+     * @throws CreateException una excepcion
      */
     public void createEntrada(Compra compra) throws CreateException;
 
     /**
      * Método que muestra todas las compras realizadas en la app
      *
-     * @return
-     * @throws ReadException
+     * @return una lista
+     * @throws ReadException una excepcion
      */
     public List<Compra> viewAllCompras() throws ReadException;
 
